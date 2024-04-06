@@ -33,20 +33,22 @@ export default function Home() {
                     </Box>
                 </Grid>
                 {/* 3つのボタンを横並び */}
-                <Grid item xs={4}>
-                    <Button variant="contained" startIcon={<MapIcon />}>
-                        Map
-                    </Button>
-                </Grid>
-                <Grid item xs={4}>
-                    <Button variant="contained" startIcon={<HomeIcon />}>
-                        Home
-                    </Button>
-                </Grid>
-                <Grid item xs={4}>
-                    <Button variant="contained" startIcon={<PeopleIcon />}>
-                        Profile
-                    </Button>
+                <Grid item xs={12} container spacing={0} justifyContent="center">
+                    <Grid item xs={4} padding={1}>
+                        <Button variant="contained" startIcon={<MapIcon />} fullWidth size="large">
+                            Map
+                        </Button>
+                    </Grid>
+                    <Grid item xs={4} padding={1}>
+                        <Button variant="contained" startIcon={<HomeIcon />} fullWidth size="large">
+                            Home
+                        </Button>
+                    </Grid>
+                    <Grid item xs={4} padding={1}>
+                        <Button variant="contained" startIcon={<PeopleIcon />} fullWidth size="large">
+                            Profile
+                        </Button>
+                    </Grid>
                 </Grid>
                 {/* Map表示用の余白 */}
                 <Grid item xs={12}>
@@ -65,12 +67,12 @@ export default function Home() {
                 </Grid>
                 {/* 下部ボタン二つ */}
                 <Grid item xs={6}>
-                    <Button variant="contained" fullWidth>
+                    <Button variant="contained" fullWidth size="large">
                         Button 1
                     </Button>
                 </Grid>
                 <Grid item xs={6}>
-                    <Button variant="contained" fullWidth>
+                    <Button variant="contained" fullWidth size="large">
                         Button 2
                     </Button>
                 </Grid>
