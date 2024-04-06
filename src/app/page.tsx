@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Button, Container, Typography, Grid, TextField, InputAdornment, Box } from '@mui/material';
-import MapIcon from '@mui/icons-material/Map';
-import HomeIcon from '@mui/icons-material/Home';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PeopleIcon from '@mui/icons-material/People';
+import DnsIcon from '@mui/icons-material/Dns';
 
 export default function Home() {
     return (
@@ -35,18 +35,18 @@ export default function Home() {
                 {/* 3つのボタンを横並び */}
                 <Grid item xs={12} container spacing={0} justifyContent="center">
                     <Grid item xs={4} padding={1}>
-                        <Button variant="contained" startIcon={<MapIcon />} fullWidth size="large">
-                            Map
+                        <Button variant="contained" startIcon={<DnsIcon />} fullWidth size="large">
+                            RANKING
                         </Button>
                     </Grid>
                     <Grid item xs={4} padding={1}>
-                        <Button variant="contained" startIcon={<HomeIcon />} fullWidth size="large">
-                            Home
+                        <Button variant="contained" startIcon={<SportsEsportsIcon />} fullWidth size="large">
+                            GAME
                         </Button>
                     </Grid>
                     <Grid item xs={4} padding={1}>
-                        <Button variant="contained" startIcon={<PeopleIcon />} fullWidth size="large">
-                            Profile
+                        <Button variant="contained" startIcon={<AddPhotoAlternateIcon />} fullWidth size="large">
+                            PICTURE
                         </Button>
                     </Grid>
                 </Grid>
