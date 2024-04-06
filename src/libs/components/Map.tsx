@@ -7,9 +7,9 @@ import { GoogleMap } from "@react-google-maps/api";
 
 //Map's styling
 const defaultMapContainerStyle = {
-    width: '100%',
+    width: '570px',
     height: '500px',
-    borderRadius: '15px 0px 0px 15px',
+    borderRadius: '15px 15px 15px 15px',
 };
 
 //K2's coordinates
@@ -19,14 +19,14 @@ const defaultMapCenter = {
 }
 
 //Default zoom level, can be adjusted
-const defaultMapZoom = 13
+const defaultMapZoom = 12
 
 //Map options
 const defaultMapOptions = {
     zoomControl: true,
     tilt: 0,
     gestureHandling: 'auto',
-    mapTypeId: 'satellite',
+    mapTypeId: 'map',
 };
 
 const MapComponent = () => {
