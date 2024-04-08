@@ -1,4 +1,5 @@
-import * as React from 'react';
+'use client'
+import React, { useState } from 'react';
 import { Button, Container, Typography, Grid, TextField, InputAdornment, Box } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
@@ -7,6 +8,12 @@ import DnsIcon from '@mui/icons-material/Dns';
 import { MapProvider } from "@/providers/map-provider";
 import { MapComponent } from "../libs/components/Map";
 export default function Home() {
+
+    const [mapVisible, setMapVisible] = useState(false);
+
+    const handleStartButtonClick = () => {
+        setMapVisible(true); // mapVisibleをtrueに更新する
+    };
     return (
 
         <Container maxWidth="sm">
@@ -53,26 +60,28 @@ export default function Home() {
                         </Button>
                     </Grid>
                 </Grid>
-                {/* Map表示用の余白 */}
-                <MapProvider>
-                    <MapComponent />
-                </MapProvider>
-                <Grid item xs={12}>
-                    <Box
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        bgcolor="#eee"
-                        style={{ height: '500px' }}
-                    >
-                        {/* Startボタン */}
-                        <Button variant="contained" color="primary" startIcon={<PlayArrowIcon />}>
-                            Start
-                        </Button>
-
-                    </Box>
-
-                </Grid>
+                {/* 条件付きレンダリングでMapProviderとStartボタンの表示を切り替える */}
+                {mapVisible ? (
+                    //map表示用のコンポーネント
+                    <MapProvider>
+                        <MapComponent />
+                    </MapProvider>
+                ) : (
+                    <Grid item xs={12}>
+                        <Box
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            bgcolor="#eee"
+                            style={{ height: '500px' }}
+                        >
+                            {/* StartボタンにonClickイベントハンドラを追加 */}
+                            <Button variant="contained" color="primary" startIcon={<PlayArrowIcon />} onClick={handleStartButtonClick}>
+                                Start
+                            </Button>
+                        </Box>
+                    </Grid>
+                )}
                 {/* 下部ボタン二つ */}
                 <Grid item xs={6}>
                     <Button variant="contained" fullWidth size="large">
