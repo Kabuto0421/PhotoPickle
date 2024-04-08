@@ -4,9 +4,11 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import DnsIcon from '@mui/icons-material/Dns';
-
+import { MapProvider } from "@/providers/map-provider";
+import { MapComponent } from "../libs/components/Map";
 export default function Home() {
     return (
+
         <Container maxWidth="sm">
             <Grid container spacing={2} style={{ padding: '20px 0' }}>
                 {/* スコア表示のBox */}
@@ -31,6 +33,7 @@ export default function Home() {
                             disabled
                         />
                     </Box>
+
                 </Grid>
                 {/* 3つのボタンを横並び */}
                 <Grid item xs={12} container spacing={0} justifyContent="center">
@@ -51,6 +54,9 @@ export default function Home() {
                     </Grid>
                 </Grid>
                 {/* Map表示用の余白 */}
+                <MapProvider>
+                    <MapComponent />
+                </MapProvider>
                 <Grid item xs={12}>
                     <Box
                         display="flex"
@@ -63,7 +69,9 @@ export default function Home() {
                         <Button variant="contained" color="primary" startIcon={<PlayArrowIcon />}>
                             Start
                         </Button>
+
                     </Box>
+
                 </Grid>
                 {/* 下部ボタン二つ */}
                 <Grid item xs={6}>
@@ -77,6 +85,8 @@ export default function Home() {
                     </Button>
                 </Grid>
             </Grid>
+
         </Container>
+
     );
 }
