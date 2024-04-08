@@ -5,8 +5,8 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import DnsIcon from '@mui/icons-material/Dns';
-import { MapProvider } from "@/providers/map-provider";
-import { MapComponent } from "../libs/components/Map";
+import MapProvider from "@/providers/map-provider";
+import MapComponent from "../libs/components/Map";
 export default function Home() {
 
     const [mapVisible, setMapVisible] = useState(false);

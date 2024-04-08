@@ -9,7 +9,7 @@ import { ReactNode } from 'react';
 const libraries = ['places', 'drawing', 'geometry'];
 
 // Define a function component called MapProvider that takes a children prop
-export function MapProvider({ children }: { children: ReactNode }) {
+export default function MapProvider({ children }: { children: ReactNode }) {
 
     // Load the Google Maps JavaScript API asynchronously
     const { isLoaded: scriptLoaded, loadError } = useJsApiLoader({
