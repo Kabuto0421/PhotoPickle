@@ -17,14 +17,14 @@ const defaultMapCenter = {
     lat: 36.561325,
     lng: 136.656205
 }
-const markers = [
-    { id: 1, position: { lat: 35.6585805, lng: 139.7454329 } }, // 東京タワー
-    { id: 2, position: { lat: 35.710063, lng: 139.8107 } }, // 東京スカイツリー
-    // その他のマーカー
-];
 interface Location {
     lat: number;
     lng: number;
+}
+
+interface MarkerData {
+    id: number;
+    position: Location;
 }
 
 // ランダムな位置を生成する関数
@@ -54,12 +54,18 @@ const defaultMapOptions = {
 };
 
 export default function MapComponent() {
-    const [randomLocation, setRandomLocation] = useState<Location>({ lat: 0, lng: 0 });
+    const [markers, setMarkers] = useState<MarkerData[]>([]);
 
     useEffect(() => {
-        const newLocation = getRandomLocation(defaultMapCenter, 5000); // 5000メートルの範囲でランダムな位置を生成
-        setRandomLocation(newLocation);
+        // ランダムな位置に10個のマーカーを生成する
+        const randomMarkers: MarkerData[] = Array.from({ length: 10 }, (_, index) => ({
+            id: index,
+            position: getRandomLocation(defaultMapCenter, 5000),
+        }));
+
+        setMarkers(randomMarkers);
     }, []);
+
     return (
         <div>
             <GoogleMap
@@ -68,7 +74,7 @@ export default function MapComponent() {
                 zoom={defaultMapZoom}
                 options={defaultMapOptions}
             >
-                {markers.map(marker => (
+                {markers.map((marker) => (
                     <Marker
                         key={marker.id}
                         position={marker.position}
@@ -76,5 +82,5 @@ export default function MapComponent() {
                 ))}
             </GoogleMap>
         </div>
-    )
+    );
 };
