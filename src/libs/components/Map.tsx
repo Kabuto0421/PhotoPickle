@@ -54,10 +54,9 @@ const defaultMapOptions = {
     gestureHandling: 'auto',
     mapTypeId: 'roadmap',
 };
-const streetViewPictureSize = "400x400"
 
 // Google Street Viewの画像を取得する関数
-function getStreetViewImage(location: Location, size: string = streetViewPictureSize): string {
+function getStreetViewImage(location: Location, size: string = "400x400"): string {
     return `https://maps.googleapis.com/maps/api/streetview?size=${size}&location=${location.lat},${location.lng}&key=AIzaSyBiHBkYrPgCds4ZjiNOJKYjxl90VzJvVns`;
 }
 
