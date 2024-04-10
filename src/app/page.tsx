@@ -1,19 +1,12 @@
 'use client'
-import React, { useState } from 'react';
+import React from 'react';
+import NextLink from 'next/link'
 import { Container, Box, Button } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import MapProvider from "@/providers/map-provider";
-import MapComponent from "../libs/components/Map";
 import ScoreAndPersonIcon from '@/libs/components/ScoreAndPerson';
 import ThreeButtons from '@/libs/components/ThreeButtons';
 
 export default function Home() {
-    const [mapVisible, setMapVisible] = useState(false);
-
-    const handleStartButtonClick = () => {
-        setMapVisible(true); // mapVisibleをtrueに更新する
-    };
-
     // アイコンのスタイル
     const iconStyle = {
         fontSize: '64px', // アイコンのサイズを大きくする
@@ -27,24 +20,20 @@ export default function Home() {
             {/* 3つのボタンを横並びに表示するコンポーネント */}
             <ThreeButtons iconStyle={iconStyle} />
 
-            {/* 条件付きレンダリングでMapProviderとStartボタンの表示を切り替える */}
-            {mapVisible ? (
-                <MapProvider>
-                    <MapComponent />
-                </MapProvider>
-            ) : (
-                <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    bgcolor="#F1D3B1"
-                    style={{ height: '500px', marginTop: '20px' }} // 余白を追加して見た目を整える
-                    sx={{ borderRadius: '16px' }}
-                >
+
+            <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                bgcolor="#F1D3B1"
+                style={{ height: '500px', marginTop: '20px' }} // 余白を追加して見た目を整える
+                sx={{ borderRadius: '16px' }}
+            >
+                {/* NextLinkでボタンを押した時にmapフォルダのページに遷移する */}
+                <NextLink href="/map">
                     <Button
                         variant="contained"
                         startIcon={<PlayArrowIcon sx={iconStyle} />}
-                        onClick={handleStartButtonClick}
                         sx={{
                             fontSize: '40px', // テキストのサイズを大きくする
                             backgroundColor: '#55645D', // ボタンの背景色を設定
@@ -56,8 +45,9 @@ export default function Home() {
                     >
                         Start
                     </Button>
-                </Box>
-            )}
+                </NextLink>
+            </Box>
+
         </Container>
     );
 }
