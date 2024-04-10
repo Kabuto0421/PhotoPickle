@@ -7,9 +7,11 @@ import { GoogleMap, Marker, StreetViewService, StreetViewPanorama } from "@react
 
 // Googleマップのスタイルを定義
 const defaultMapContainerStyle = {
-    width: '570px',
-    height: '500px',
+    width: '80vw', // ビューポート幅の80%に
+    height: '70vh', // ビューポート高さの50%に
     borderRadius: '15px',
+    maxWidth: '570px', // 最大幅を570pxに制限
+    maxHeight: '500px', // 最大高さを500pxに制限
 };
 
 // マップのデフォルトの中心位置を定義（ここでは金沢の座標を使用）
