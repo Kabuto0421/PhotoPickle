@@ -30,7 +30,7 @@ export default function Home() {
                 sx={{ borderRadius: '16px' }}
             >
                 {/* NextLinkでボタンを押した時にmapフォルダのページに遷移する */}
-                <NextLink href="/map">
+                <NextLink href="/mapShow">
                     <Button
                         variant="contained"
                         startIcon={<PlayArrowIcon sx={iconStyle} />}
