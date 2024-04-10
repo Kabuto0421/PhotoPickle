@@ -3,8 +3,10 @@ we need to make this component client rendered as well*/
 'use client'
 import React, { useEffect, useState, useCallback } from 'react';
 //Map component Component from library
-import { GoogleMap, Marker, StreetViewService, StreetViewPanorama } from "@react-google-maps/api";
-
+import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
+import { Box, Button, Typography } from '@mui/material';
+import { blue } from '@mui/material/colors';
+import NextLink from 'next/link'
 // Googleマップのスタイルを定義
 const defaultMapContainerStyle = {
     width: '95vw', // ビューポート幅の80%に
@@ -65,6 +67,7 @@ export default function MapComponent() {
     // マーカーと選択された位置の状態
     const [markers, setMarkers] = useState<MarkerData[]>([]);
     const [selectedPosition, setSelectedPosition] = useState<Location | null>(null);
+    const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null);
 
     // コンポーネントのマウント時にマーカーを追加する
     useEffect(() => {
@@ -110,13 +113,19 @@ export default function MapComponent() {
     }, []);
 
     // マーカーをクリックした時に実行される関数
-    function handleMarkerClick(position: Location) {
+    function handleMarkerClick(markerId: number, position: Location) {
         // 選択された位置に基づいてStreet View画像のURLを取得
         const imageUrl = getStreetViewImage(position);
         // コンソールに画像のURLを表示
         console.log(imageUrl);
+
+        const adjustedPosition = {
+            lat: position.lat + 0.005, // 緯度を少し増やす
+            lng: position.lng
+        };
         /*選択された位置を保存(緯度経度)*/
-        setSelectedPosition(position);
+        setSelectedMarkerId(markerId);
+        setSelectedPosition(adjustedPosition); // 調整された位置を設定
     }
 
     return (
@@ -131,10 +140,50 @@ export default function MapComponent() {
                     <Marker
                         key={marker.id}
                         position={marker.position}
-                        onClick={() => handleMarkerClick(marker.position)}
+                        onClick={() => handleMarkerClick(marker.id, marker.position)}
                     />
                 ))}
+
+                {selectedMarkerId !== null && selectedPosition && (
+                    <InfoWindow
+                        position={{ lat: selectedPosition.lat, lng: selectedPosition.lng }}
+                        onCloseClick={() => setSelectedMarkerId(null)}
+                    >
+                        <div>このピンをクリックしてるよ!
+                        </div>
+                    </InfoWindow>
+                )}
             </GoogleMap>
+            <Box
+                sx={{
+                    position: 'absolute',
+                    bottom: 120,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: 1000, // Mapの上に表示
+                    ...(selectedMarkerId === null && {
+                        bgcolor: blue[500], // 背景色を青に設定
+                        color: 'white', // テキスト色を白に設定
+                        padding: 1, // パディングを追加
+                        borderRadius: '4px', // 角の丸みを追加
+                    }),
+                }}
+            >
+                {selectedMarkerId === null ? (
+                    <Typography variant="h6">ピンを選択してください。</Typography>
+                ) : (
+                    <NextLink href="/game">
+                        <Button variant="contained" color="primary" onClick={() => {
+                            console.log("このピンを選択する！", selectedPosition);
+                            // ここにピンを選択したときの処理を追加
+                        }}>
+                            <Typography variant="h6">このピンを選択する！</Typography>
+                        </Button>
+                    </NextLink>
+                )}
+            </Box>
+
         </div>
     );
+
 };
