@@ -2,7 +2,7 @@
 import React from 'react';
 import { Grid, Typography, Box, Button } from '@mui/material';
 import { useSearchParams } from "next/navigation";
-
+import Link from 'next/link';
 export default function Game() {
     const searchParams = useSearchParams();
     const lat = searchParams.get("lat");
@@ -107,9 +107,11 @@ export default function Game() {
                         </Button>
                     </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                    <Button variant="contained" fullWidth sx={{ padding: '6px' }}><Typography variant="h6">写真を撮る</Typography></Button>
-                </Grid>
+                <Link href="cameraPage">
+                    <Grid item xs={12}>
+                        <Button variant="contained" fullWidth sx={{ padding: '6px' }}><Typography variant="h6">写真を撮る</Typography></Button>
+                    </Grid>
+                </Link>
             </Grid>
         </Box>
     );
