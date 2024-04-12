@@ -19,7 +19,16 @@ export default function Game() {
         borderRadius: 2,
         textAlign: 'center',
     };
-
+    const handleRouteClick = () => {
+        if (lat && lng) {
+            // Google Mapsへの経路検索のURLを構築
+            const url = `https://www.google.com/maps/dir/?api=1&origin=My+Location&destination=${lat},${lng}&travelmode=driving`;
+            // リンクに飛ばす
+            window.open(url, '_blank');
+        } else {
+            console.error('緯度または経度の情報が不足しています');
+        }
+    };
     return (
         <Box sx={{
             width: 1,
@@ -93,7 +102,9 @@ export default function Game() {
                         <Button variant="outlined" fullWidth sx={{ padding: '6px' }}><Typography variant="h6">現在の位置</Typography></Button>
                     </Grid>
                     <Grid item xs={5} md={6}>
-                        <Button variant="outlined" fullWidth sx={{ padding: '6px' }}><Typography variant="h6">経路</Typography></Button>
+                        <Button variant="outlined" fullWidth sx={{ padding: '6px' }} onClick={handleRouteClick}>
+                            <Typography variant="h6">経路</Typography>
+                        </Button>
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>
