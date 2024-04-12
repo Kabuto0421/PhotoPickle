@@ -6,7 +6,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 import { Box, Button, Typography } from '@mui/material';
 import { blue } from '@mui/material/colors';
-import NextLink from 'next/link'
+import Link from "next/link";
 // Googleマップのスタイルを定義
 const defaultMapContainerStyle = {
     width: '95vw', // ビューポート幅の80%に
@@ -68,7 +68,7 @@ export default function MapComponent() {
     const [markers, setMarkers] = useState<MarkerData[]>([]);
     const [selectedPosition, setSelectedPosition] = useState<Location | null>(null);
     const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null);
-
+    const [selectedMarkerPicture, setSelectedMarkerPicture] = useState<string | null>(null);
     // コンポーネントのマウント時にマーカーを追加する
     useEffect(() => {
         const service = new google.maps.StreetViewService();
@@ -117,7 +117,7 @@ export default function MapComponent() {
         // 選択された位置に基づいてStreet View画像のURLを取得
         const imageUrl = getStreetViewImage(position);
         // コンソールに画像のURLを表示
-        console.log(imageUrl);
+
 
         const adjustedPosition = {
             lat: position.lat + 0.005, // 緯度を少し増やす
@@ -126,6 +126,8 @@ export default function MapComponent() {
         /*選択された位置を保存(緯度経度)*/
         setSelectedMarkerId(markerId);
         setSelectedPosition(adjustedPosition); // 調整された位置を設定
+        /*選択されたマーカー付近の写真*/
+        setSelectedMarkerPicture(imageUrl);
     }
 
     return (
@@ -172,14 +174,20 @@ export default function MapComponent() {
                 {selectedMarkerId === null ? (
                     <Typography variant="h6">ピンを選択してください。</Typography>
                 ) : (
-                    <NextLink href="/game">
+                    <Link href={{
+                        pathname: "/game", query: {
+                            lat: selectedPosition?.lat,
+                            lng: selectedPosition?.lng,
+                            pictureURL: selectedMarkerPicture,
+                        }
+                    }}>
                         <Button variant="contained" color="primary" onClick={() => {
                             console.log("このピンを選択する！", selectedPosition);
                             // ここにピンを選択したときの処理を追加
                         }}>
                             <Typography variant="h6">このピンを選択する！</Typography>
                         </Button>
-                    </NextLink>
+                    </Link>
                 )}
             </Box>
 
