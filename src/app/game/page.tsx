@@ -1,12 +1,30 @@
 'use client'
-import React from 'react';
+import React, { useState } from 'react';
 import { Grid, Typography, Box, Button } from '@mui/material';
 import { useSearchParams } from "next/navigation";
 import Link from 'next/link';
+const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
+    const R = 6371; // 地球の半径(km)
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // 距離(km)
+};
 export default function Game() {
+    const [latitude, setLatitude] = useState<number | null>(null);
+    const [longitude, setLongitude] = useState<number | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [distanceMessage, setDistanceMessage] = useState<string | null>(null);
+
     const searchParams = useSearchParams();
     const lat = searchParams.get("lat");
     const lng = searchParams.get("lng");
+    const targetLat = lat ? parseFloat(lat) : 0;
+    const targetLng = lng ? parseFloat(lng) : 0;
     const pictureURL = searchParams.get("pictureURL");
     const place = "金沢";
     const score = 10000;
@@ -18,6 +36,24 @@ export default function Game() {
         my: 1,
         borderRadius: 2,
         textAlign: 'center',
+    };
+
+    const handleCurrentPositionCheck = () => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setLatitude(position.coords.latitude);
+                setLongitude(position.coords.longitude);
+                setError(null);
+                // 距離を計算
+                const distance = calculateDistance(position.coords.latitude, position.coords.longitude, targetLat, targetLng);
+                setDistanceMessage(distance <= 1 ? "近いです" : "遠いです"); // 1km未満を「近い」と定義
+            },
+            (err) => {
+                setError(`位置情報の取得に失敗しました: ${err.message}`);
+                setLatitude(null);
+                setLongitude(null);
+            }
+        );
     };
     const handleRouteClick = () => {
         if (lat && lng) {
@@ -78,7 +114,7 @@ export default function Game() {
                 </Grid>
                 <Grid item xs={12}>
                     <Box sx={boxStyle}>
-                        <Typography variant="h6">近いです</Typography>
+                        <Typography variant="h6">{distanceMessage}</Typography>
 
                     </Box>
                 </Grid>
@@ -89,8 +125,8 @@ export default function Game() {
                                 <Typography variant="caption">現在地</Typography>
                             </Grid>
                             <Grid item xs={10} >
-                                <Typography variant="caption">緯度: <br></br></Typography>
-                                <Typography variant="caption">経度: </Typography>
+                                <Typography variant="caption">緯度: {latitude}<br></br></Typography>
+                                <Typography variant="caption">経度:{longitude} </Typography>
                             </Grid>
                         </Grid>
                     </Box>
@@ -99,7 +135,7 @@ export default function Game() {
 
                 <Grid container item xs={12} justifyContent="center">
                     <Grid item xs={7} md={6}>
-                        <Button variant="outlined" fullWidth sx={{ padding: '6px' }}><Typography variant="h6">現在の位置</Typography></Button>
+                        <Button variant="outlined" fullWidth sx={{ padding: '6px' }} onClick={handleCurrentPositionCheck}><Typography variant="h6">現在の位置</Typography></Button>
                     </Grid>
                     <Grid item xs={5} md={6}>
                         <Button variant="outlined" fullWidth sx={{ padding: '6px' }} onClick={handleRouteClick}>
