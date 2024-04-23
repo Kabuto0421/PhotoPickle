@@ -2,6 +2,7 @@
 import React from 'react';
 import { TextField, Button, Grid, Container, Typography, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Link from 'next/link';
 
 const CustomTextField = styled(TextField)({
   '& .MuiFormLabel-asterisk': {
@@ -66,6 +67,13 @@ const Login = () => {
                 ログイン
               </Button>
             </Grid>
+
+            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+              <Link href="/signup" style={{ color: '#1d9bf0'}}>
+                サインアップする
+              </Link>
+            </Grid>
+                
           </Grid>
         </form>
       </Box>
