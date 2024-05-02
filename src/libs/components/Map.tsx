@@ -59,7 +59,7 @@ const defaultMapOptions = {
 
 // Google Street Viewの画像を取得する関数
 function getStreetViewImage(location: Location, size: string = "400x400"): string {
-    return `https://maps.googleapis.com/maps/api/streetview?size=${size}&location=${location.lat},${location.lng}&key=AIzaSyBiHBkYrPgCds4ZjiNOJKYjxl90VzJvVns`;
+    return `https://maps.googleapis.com/maps/api/streetview?size=${size}&location=${location.lat},${location.lng}&key=AIzaSyCugBNLjCF_eyg39XDM7A6GMi_P6EtVSqg`;
 }
 
 // MapComponentの定義
