@@ -1,16 +1,34 @@
-import { redirect } from "next/navigation"
-import { getAuthSession } from "@/libs/nextauth"
-import Login from "@/libs/components/auth/Login"
+'use client'
 
-// ログインページ
-const LoginPage = async () => {
-  const user = await getAuthSession()
+import { useEffect } from 'react';
+import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from 'next/navigation';
 
-  if (user) {
-    redirect("/")
-  }
+const LoginPage = () => {
+  const { data: session } = useSession();
+  const router = useRouter();
 
-  return <Login />
+  useEffect(() => {
+    if (session) {
+      router.push('/');  // トップページにリダイレクト
+    }
+  }, [session, router]);
+
+  return (
+    <div>
+      {!session && (
+        <button onClick={() => signIn()}>
+          ログイン
+        </button>
+      )}
+
+      {session && (
+        <button onClick={() => signOut()}>
+          ログアウト
+        </button>
+      )}
+    </div>
+  );
 }
 
-export default LoginPage
+export default LoginPage;
