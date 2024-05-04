@@ -61,7 +61,10 @@ const defaultMapOptions = {
 // Google Street Viewの画像を取得する関数
 function getStreetViewImage(location: Location, size: string = "400x400"): string {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
-    return `https://maps.googleapis.com/maps/api/streetview?size=${size}&location=${location.lat},${location.lng}&key={apiKey}`;
+    if (!apiKey) {
+        throw new Error('Google Maps APIキーが設定されていません');
+    }
+    return `https://maps.googleapis.com/maps/api/streetview?size=${size}&location=${location.lat},${location.lng}&key=${apiKey}`;
 }
 
 // MapComponentの定義
