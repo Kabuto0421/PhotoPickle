@@ -1,4 +1,4 @@
-'use client'
+
 import React from 'react';
 import NextLink from 'next/link'
 import { Container, Box, Button } from '@mui/material';

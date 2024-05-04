@@ -2,37 +2,69 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, IconButton } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-
+import { useMixContext } from "next-approuter-context";
+import { context } from "../context";
+import Link from 'next/link';
 export default function CameraPage() {
     const refVideo = useRef<HTMLVideoElement>(null);
     const [photo, setPhoto] = useState<string | undefined>(undefined);
     const [capturing, setCapturing] = useState(true);
+    const photoContext = context();
 
     useEffect(() => {
-        const constraints = { video: { facingMode: "user" } };
+        const constraints = {
+            video: {
+                width: 400,
+                height: 400,
+                facingMode: "user"
+            }
+        };
+
         navigator.mediaDevices.getUserMedia(constraints)
             .then(stream => {
                 if (refVideo.current) {
                     refVideo.current.srcObject = stream;
-                    refVideo.current.play().catch(err => console.error("Video play failed: ", err));
                 }
             })
-            .catch(err => console.error("Error accessing media devices: ", err));
+            .catch(err => {
+                console.error("Error accessing media devices: ", err);
+            });
     }, []);
+
 
     const takePhoto = () => {
         const video = refVideo.current;
         const canvas = document.createElement('canvas');
+        const targetWidth = 400;
+        const targetHeight = 400;
+
         if (video) {
             const context = canvas.getContext('2d');
-            const width = video.videoWidth;
-            const height = video.videoHeight;
+            const aspectRatio = video.videoWidth / video.videoHeight;
+            let sourceWidth = video.videoWidth;
+            let sourceHeight = video.videoHeight;
 
-            canvas.width = width;
-            canvas.height = height;
-            context?.drawImage(video, 0, 0, width, height);
+            // アスペクト比を維持しつつ、目標サイズに最適化
+            if (aspectRatio > 1) {
+                // 横長の場合
+                sourceHeight = video.videoHeight;
+                sourceWidth = sourceHeight * aspectRatio;
+            } else {
+                // 縦長の場合
+                sourceWidth = video.videoWidth;
+                sourceHeight = sourceWidth / aspectRatio;
+            }
 
+            // canvas のサイズを目標サイズに設定
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+
+            // ビデオから取得した画像を canvas に描画し、リサイズ
+            context?.drawImage(video, 0, 0, sourceWidth, sourceHeight, 0, 0, targetWidth, targetHeight);
+
+            // canvas を画像データURLとしてエクスポート
             const image = canvas.toDataURL('image/png');
+            photoContext.set({ takePicture: image });
             setPhoto(image);
             video.pause();
             setCapturing(false);
@@ -50,9 +82,9 @@ export default function CameraPage() {
     return (
         <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
             {capturing ? (
-                <video ref={refVideo} autoPlay muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <video ref={refVideo} autoPlay playsInline width="400" height="400" />
             ) : (
-                <img src={photo} alt="Captured" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src={photo} alt="Captured" style={{ width: "400", height: "400", objectFit: 'cover' }} />
             )}
             {capturing ? (
                 <IconButton
@@ -72,7 +104,9 @@ export default function CameraPage() {
             ) : (
                 <div style={{ position: 'absolute', bottom: 20, right: 'calc(50% - 140px)' }}>
                     <Button variant="contained" onClick={resetCamera} sx={{ margin: 1 }}>撮り直す</Button>
-                    <Button variant="contained" onClick={() => console.log('次へ進む')} sx={{ margin: 1 }}>次へ進む</Button>
+                    <Link href="/compare" >
+                        <Button variant="contained" onClick={() => console.log('次へ進む')} sx={{ margin: 1 }}>次へ進む</Button>
+                    </Link>
                 </div>
             )}
             <canvas style={{ display: 'none' }} />
