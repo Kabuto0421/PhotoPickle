@@ -13,7 +13,7 @@ export default function MapProvider({ children }: { children: ReactNode }) {
 
     // Google Maps JavaScript APIを非同期的にロード
     const { isLoaded: scriptLoaded, loadError } = useJsApiLoader({
-        googleMapsApiKey: process.env.GOOGLE_MAP_API_KEY ?? '',
+        googleMapsApiKey: "AIzaSyCugBNLjCF_eyg39XDM7A6GMi_P6EtVSqg",
         libraries: libraries as Libraries,
     });
 
