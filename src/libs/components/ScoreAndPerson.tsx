@@ -2,6 +2,7 @@
 import React, { CSSProperties } from 'react';
 import { Grid, Box, Typography, Button } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
+import Link from 'next/link';
 
 // ScoreAndPersonIconコンポーネントのpropsの型を定義する。
 interface ScoreAndPersonIconProps {
@@ -43,18 +44,20 @@ export default function ScoreAndPersonIcon({ score, iconStyle }: ScoreAndPersonI
             </Grid>
             {/* Personアイコンを表示するボタン */}
             <Grid item xs={2.5}>
-                <Button
-                    variant="contained" // ボタンスタイルを塗りつぶしに
-                    fullWidth // 幅いっぱいに展開
-                    size="large" // ボタンのサイズを大きくする
-                    sx={{
-                        backgroundColor: "#F1D3B1", // ボタンの背景色
-                        color: "black", // ボタン内のテキスト色
-                    }}
-                >
-                    {/* iconStyleを適用したPersonアイコン */}
-                    <PersonIcon style={iconStyle} />
-                </Button>
+                <Link href="/profile">
+                    <Button
+                        variant="contained" // ボタンスタイルを塗りつぶしに
+                        fullWidth // 幅いっぱいに展開
+                        size="large" // ボタンのサイズを大きくする
+                        sx={{
+                            backgroundColor: "#F1D3B1", // ボタンの背景色
+                            color: "black", // ボタン内のテキスト色
+                        }}
+                        >
+                        {/* iconStyleを適用したPersonアイコン */}
+                        <PersonIcon style={iconStyle} />
+                    </Button>
+                </Link>
             </Grid>
         </Grid>
     );
