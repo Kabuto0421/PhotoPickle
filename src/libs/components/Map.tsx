@@ -74,9 +74,24 @@ export default function MapComponent() {
     const [selectedPosition, setSelectedPosition] = useState<Location | null>(null);
     const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null);
     const [selectedMarkerPicture, setSelectedMarkerPicture] = useState<string | null>(null);
+    const [mapCenter, setMapCenter] = useState({
+        lat: 36.561325,
+        lng: 136.656205
+    });
     const photoContext = context();
     // コンポーネントのマウント時にマーカーを追加する
     useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                setMapCenter({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                });
+            }, () => {
+                console.error("位置情報の取得に失敗しました。");
+            });
+        }
+
         const service = new google.maps.StreetViewService();
 
         // 与えられた位置にStreet Viewが存在するかを確認する関数
@@ -103,7 +118,7 @@ export default function MapComponent() {
         const addMarkers = async () => {
             const newMarkers: MarkerData[] = [];
             while (newMarkers.length < 10) {
-                const randomLocation = getRandomLocation(defaultMapCenter, 5000);
+                const randomLocation = getRandomLocation(mapCenter, 5000);
                 const result = await checkStreetViewAvailability(randomLocation, 50);
                 if (result) {
                     newMarkers.push({
