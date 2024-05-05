@@ -18,7 +18,7 @@ const LoginPage = () => {
           </button>
           <button>
             <Link href="/profile">
-              プロフィールに戻る
+              キャンセル
             </Link>
           </button>
         </div>
