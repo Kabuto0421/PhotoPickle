@@ -15,12 +15,6 @@ const defaultMapContainerStyle = {
     borderRadius: '15px',
 };
 
-// マップのデフォルトの中心位置を定義（ここでは金沢の座標を使用）
-const defaultMapCenter = {
-    lat: 36.561325,
-    lng: 136.656205
-}
-
 // 位置とマーカーデータのためのTypeScriptインターフェース
 interface Location {
     lat: number;
@@ -156,7 +150,7 @@ export default function MapComponent() {
         <div>
             <GoogleMap
                 mapContainerStyle={defaultMapContainerStyle}
-                center={defaultMapCenter}
+                center={mapCenter}
                 zoom={defaultMapZoom}
                 options={defaultMapOptions}
             >
