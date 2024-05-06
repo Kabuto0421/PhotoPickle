@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { context } from '../context';
 import Image from 'next/image'
 export default function CameraPage() {
@@ -8,6 +8,43 @@ export default function CameraPage() {
     const targetImage = ctx.get().targetImage;
     const takePicture = ctx.get().takePicture;
 
+    interface ImageCompareResponse {
+        similarity_score: number;
+    }
+
+    async function compareImages(image_url1: string, image_url2: string): Promise<void> {
+        console.log(image_url1)
+        console.log(image_url2)
+        try {
+            const response = await fetch('http://localhost:8080/compare-images', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    image_url1,
+                    image_url2,
+                }),
+            });
+            const data: ImageCompareResponse = await response.json();
+
+            console.log("類似度スコア:", data.similarity_score);
+            let similarity_scoreText: string = "";
+            if (data.similarity_score < 18) {
+                console.log("類似度スコアが18より低かったのでスコアに100点を追加します。");
+            } else if (data.similarity_score < 30) {
+                console.log("撮り直しまっしー");
+            } else {
+                console.log("だら！全然違うがいね！撮り直しまっし！");
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+    const handleSubmit = async () => {
+        // const base64Data = takePicture.split(',')[1]; // プレフィックスを除去して、Base64エンコードされたデータのみを取得
+        await compareImages(targetImage, takePicture)
+    };
     return (
         <Box sx={{
             display: 'flex',
@@ -37,6 +74,8 @@ export default function CameraPage() {
                     画像がありません
                 </Typography>
             }
+            <Button onClick={handleSubmit}>ああああ</Button>
         </Box>
+
     );
 }
