@@ -78,8 +78,8 @@ export default function MapComponent() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(position => {
                 setMapCenter({
-                    lat: 26.3607052,
-                    lng: 127.7314782
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
                 });
             }, () => {
                 console.error("位置情報の取得に失敗しました。");
