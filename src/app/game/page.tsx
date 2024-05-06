@@ -34,8 +34,8 @@ export default function Game() {
     const boxStyle = {
         bgcolor: '#e0e0e0',
         padding: 1,
-        my: 1,
         borderRadius: 2,
+        mb: 1,
         textAlign: 'center',
     };
 
@@ -69,20 +69,21 @@ export default function Game() {
     return (
         <Box sx={{
             width: 1,
-            height: '100vh',
+            height: '100%',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between',
-            overflow: 'auto',
-        }}>
-            <Grid container spacing={0.5} sx={{ maxWidth: 450, mx: 'auto' }}>
+        }}
+            alignItems="center"
+            justifyContent="center"
+        >
+            <Grid container sx={{ maxWidth: 450 }} justifyContent="center" alignItems="center">
                 <Grid item xs={12}>
-                    <Box sx={{ ...boxStyle, my: 1 }}>
-                        <Typography variant="h4" align="center">{place} スコア: {score}</Typography>
+                    <Box sx={{ ...boxStyle, height: '5vh' }}>
+                        <Typography variant="h5" align="center">{place} スコア: {score}</Typography>
                     </Box>
                 </Grid>
                 <Grid item xs={12}>
-                    <Box sx={boxStyle}>
+                    <Box sx={{ ...boxStyle, height: '9vh'}}>
                         <Grid container>
                             <Grid item xs={2}>
                                 <Typography variant="caption">目的地:</Typography>
@@ -95,12 +96,12 @@ export default function Game() {
                     </Box>
                 </Grid>
 
-
                 <Grid item xs={12} justifyContent="center">
                     <Box sx={{
                         display: 'flex',
                         justifyContent: 'center', // This centers the content horizontally
-                        width: '100%' // Ensures the Box takes full width
+                        width: '100%', // Ensures the Box takes full width
+                        mb: 1,
                     }}>
                         <img
                             src={typeof pictureURL === 'string' ? pictureURL : '/default-image.jpg'}
@@ -113,16 +114,17 @@ export default function Game() {
                         />
                     </Box>
                 </Grid>
-                <Grid item xs={12}>
-                    <Box sx={boxStyle}>
-                        <Typography variant="h6">{distanceMessage}</Typography>
 
+                <Grid item xs={12}>
+                    <Box sx={{ ...boxStyle, height: '8vh'}}>
+                        {/* <Typography variant="h6">{distanceMessage}</Typography> */}
+                        <Typography variant="h6">近いです</Typography>
                     </Box>
                 </Grid>
                 <Grid item xs={12}>
-                    <Box sx={boxStyle}>
+                    <Box sx={{ ...boxStyle, height: '9vh'}}>
                         <Grid container>
-                            <Grid item xs={2}>
+                            <Grid item xs={2} >
                                 <Typography variant="caption">現在地</Typography>
                             </Grid>
                             <Grid item xs={10} >
@@ -133,10 +135,11 @@ export default function Game() {
                     </Box>
                 </Grid>
 
-
-                <Grid container item xs={12} justifyContent="center">
+                <Grid container item xs={12} spacing={1} justifyContent="center" sx={{mb: 1}}>
                     <Grid item xs={7} md={6}>
-                        <Button variant="outlined" fullWidth sx={{ padding: '6px' }} onClick={handleCurrentPositionCheck}><Typography variant="h6">現在の位置</Typography></Button>
+                        <Button variant="outlined" fullWidth sx={{ padding: '6px' }} onClick={handleCurrentPositionCheck}>
+                            <Typography variant="h6">現在の位置</Typography>
+                        </Button>
                     </Grid>
                     <Grid item xs={5} md={6}>
                         <Button variant="outlined" fullWidth sx={{ padding: '6px' }} onClick={handleRouteClick}>
@@ -144,11 +147,11 @@ export default function Game() {
                         </Button>
                     </Grid>
                 </Grid>
-                <Link href="cameraPage">
-                    <Grid item xs={12}>
-                        <Button variant="contained" fullWidth sx={{ padding: '6px' }}><Typography variant="h6">写真を撮る</Typography></Button>
-                    </Grid>
-                </Link>
+                <Grid item xs={12}>
+                    <Button variant="contained" fullWidth sx={{ padding: '6px' }} href='cameraPage'>
+                        <Typography variant="h6">写真を撮る</Typography>
+                    </Button>
+                </Grid>
             </Grid>
         </Box>
     );

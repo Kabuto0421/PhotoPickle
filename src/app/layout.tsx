@@ -13,8 +13,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" style={{ height: '100vh' }}>
+      <body className={inter.className} style={{ overflow: 'auto', height: '100%' }}>
+        <main style={{ marginTop: '3%', overflow: 'hidden', height: '90%'}} >
+          {children}
+        </main>
+      </body>
     </html>
   )
 }
