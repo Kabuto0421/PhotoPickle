@@ -69,8 +69,8 @@ export default function MapComponent() {
     const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null);
     const [selectedMarkerPicture, setSelectedMarkerPicture] = useState<string | null>(null);
     const [mapCenter, setMapCenter] = useState({
-        lat: 36.561325,
-        lng: 136.656205
+        lat: 0,
+        lng: 0
     });
     const photoContext = context();
     // コンポーネントのマウント時にマーカーを追加する
@@ -109,17 +109,20 @@ export default function MapComponent() {
 
         const addMarkers = async () => {
             const newMarkers: MarkerData[] = [];
-            while (newMarkers.length < 10) {
-                const randomLocation = getRandomLocation(mapCenter, 5000);
-                const result = await checkStreetViewAvailability(randomLocation, 50);
-                if (result) {
-                    newMarkers.push({
-                        id: newMarkers.length,
-                        position: result.toJSON()
-                    });
+
+            if (mapCenter.lat !== 0 || mapCenter.lng !== 0) {
+                while (newMarkers.length < 10) {
+                    const randomLocation = getRandomLocation(mapCenter, 5000);
+                    const result = await checkStreetViewAvailability(randomLocation, 50);
+                    if (result) {
+                        newMarkers.push({
+                            id: newMarkers.length,
+                            position: result.toJSON()
+                        });
+                    }
                 }
+                setMarkers(newMarkers);
             }
-            setMarkers(newMarkers);
         };
 
         addMarkers();
