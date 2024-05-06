@@ -85,19 +85,18 @@ export default function MapComponent() {
                 console.error("位置情報の取得に失敗しました。");
             });
         }
+    }, []);
 
+    useEffect(() => {
         const service = new google.maps.StreetViewService();
 
-        // 与えられた位置にStreet Viewが存在するかを確認する関数
         const checkStreetViewAvailability = (location: Location, radius: number): Promise<google.maps.LatLng | null> => {
             return new Promise(resolve => {
                 service.getPanorama({ location, radius }, (data, status) => {
                     if (status === google.maps.StreetViewStatus.OK) {
-                        // data.location.latLng が undefined ではないことを確認
                         if (data != null && data.location !== undefined && data.location.latLng !== undefined) {
                             resolve(data.location.latLng);
                         } else {
-                            // data.location.latLng が undefined の場合、null を resolve する
                             console.log("data.location.latLng is undefined");
                             resolve(null);
                         }
@@ -108,7 +107,6 @@ export default function MapComponent() {
             });
         };
 
-        // ランダムな位置にStreet Viewが存在するマーカーを10個追加する関数
         const addMarkers = async () => {
             const newMarkers: MarkerData[] = [];
             while (newMarkers.length < 10) {
@@ -125,7 +123,8 @@ export default function MapComponent() {
         };
 
         addMarkers();
-    }, []);
+    }, [mapCenter]);
+
 
     // マーカーをクリックした時に実行される関数
     function handleMarkerClick(markerId: number, position: Location) {

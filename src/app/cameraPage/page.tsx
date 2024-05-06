@@ -16,9 +16,14 @@ export default function CameraPage() {
             video: {
                 width: 400,
                 height: 400,
-                facingMode: "user"
+                facingMode: "environment"
             }
         };
+
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            console.error("このデバイスではメディアデバイスがサポートされていません。");
+            return;
+        }
 
         navigator.mediaDevices.getUserMedia(constraints)
             .then(stream => {
@@ -27,9 +32,11 @@ export default function CameraPage() {
                 }
             })
             .catch(err => {
-                console.error("Error accessing media devices: ", err);
+                console.error("メディアデバイスのアクセスにエラーが発生しました: ", err);
+                alert("カメラへのアクセスを許可してください。");
             });
     }, []);
+
 
 
     const takePhoto = () => {
