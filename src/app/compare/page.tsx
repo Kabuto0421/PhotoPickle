@@ -1,20 +1,28 @@
-'use client'
-import React from 'react';
-import { Box, Button, Typography } from '@mui/material';
+"use client"
+import React, { useState, useEffect } from 'react';
+import { Box, Button, Typography, IconButton } from '@mui/material';
+import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import { context } from '../context';
-import Image from 'next/image'
-export default function CameraPage() {
+import Image from 'next/image';
+import { truncate } from 'fs';
+import Link from 'next/link';
+export default function ComparePage() {
     const ctx = context();
     const targetImage = ctx.get().targetImage;
     const takePicture = ctx.get().takePicture;
+    const [matchRate, setMatchRate] = useState<number>(Math.random() * 100);
+    const [highScoreAchieved, setHighScoreAchieved] = useState<boolean>(false);
+    const [intervalId, setIntervalId] = useState<NodeJS.Timeout | number | undefined>(undefined);
 
-    interface ImageCompareResponse {
-        similarity_score: number;
-    }
+    useEffect(() => {
+        const id = setInterval(() => {
+            setMatchRate(Math.random() * 100);
+        }, 100);
+        setIntervalId(id);
+        return () => clearInterval(id);
+    }, []);
 
     async function compareImages(image_url1: string, image_url2: string): Promise<void> {
-        console.log(image_url1)
-        console.log(image_url2)
         try {
             const response = await fetch('http://localhost:8080/compare-images', {
                 method: 'POST',
@@ -26,56 +34,111 @@ export default function CameraPage() {
                     image_url2,
                 }),
             });
-            const data: ImageCompareResponse = await response.json();
+            const data = await response.json();
+            clearInterval(intervalId);
+            const similarityScore = parseFloat(data.similarity_score);
 
-            console.log("類似度スコア:", data.similarity_score);
-            let similarity_scoreText: string = "";
-            if (data.similarity_score < 18) {
-                console.log("類似度スコアが18より低かったのでスコアに100点を追加します。");
-            } else if (data.similarity_score < 30) {
-                console.log("撮り直しまっしー");
+            if (isNaN(similarityScore)) {
+                console.error("Received an invalid similarity score:", data.similarity_score);
+                setMatchRate(0.00);
             } else {
-                console.log("だら！全然違うがいね！撮り直しまっし！");
+                const baseScore = 19;
+                const maxScore = 29;
+                const matchScore = Math.max(0, 100 * (1 - (similarityScore - baseScore) / (maxScore - baseScore)));
+                if (matchScore >= 90) {
+                    setHighScoreAchieved(true);
+                }
+                if (matchScore >= 100) {
+                    setMatchRate(100.00);
+                } else {
+                    setMatchRate(parseFloat(matchScore.toFixed(2)))
+                }
+
             }
         } catch (error) {
             console.error('Error:', error);
+            setMatchRate(0.00);
         }
     }
+
     const handleSubmit = async () => {
-        // const base64Data = takePicture.split(',')[1]; // プレフィックスを除去して、Base64エンコードされたデータのみを取得
-        await compareImages(targetImage, takePicture)
+        if (highScoreAchieved) {
+            // スコアが90以上で「次に進む」の処理
+            // ここに次のステップに進むためのコードを書く
+            ctx.set({ targetImage: "", takePicture: "" })
+            console.log("次に進む処理を実行");
+        } else {
+            // 通常の「ぴっくるん！」の処理
+            await compareImages(targetImage, takePicture);
+        }
     };
+
+
     return (
         <Box sx={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
-            height: '100vh',
-            bgcolor: 'background.paper',
-            p: 3
+            justifyContent: 'flex-start',
+            bgcolor: 'background.default',
+            p: 3,
+            boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)'
         }}>
-            <Typography variant="h4" gutterBottom>目的画像</Typography>
-            {targetImage ? (
-                <img src={targetImage} alt="Target" />
-            ) : (
-                <Typography>画像がありません</Typography>
+            {highScoreAchieved && (
+                <Box sx={{
+                    mb: 3,
+                    p: 1,
+                    bgcolor: 'lightgreen',
+                    borderRadius: '5px',
+                    boxShadow: '0px 2px 5px rgba(0,0,0,0.3)'
+                }}>
+                    <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'darkgreen' }}>
+                        スコア獲得！
+                    </Typography>
+                </Box>
             )}
-            <Typography variant="h4" gutterBottom>最近撮影された画像</Typography>
-            {takePicture ? (
-                <Image
-                    src={takePicture}
-                    alt="Picture of the author"
-                    width={400}
-                    height={400}
-                />
-            ) :
-                <Typography >
-                    画像がありません
+            <Box sx={{
+                mb: 3,
+                mt: highScoreAchieved ? 1 : 5,
+                p: 1,
+                bgcolor: 'rgba(173, 216, 230, 0.4)',
+                borderRadius: '5px',
+                boxShadow: '0px 2px 5px rgba(0,0,0,0.3)'
+            }}>
+                <Typography variant="h3" sx={{ fontWeight: 'bold', color: 'black' }}>
+                    一致率：<span style={{ color: '#00008B' }}>{matchRate.toFixed(2)}%</span>
                 </Typography>
-            }
-            <Button onClick={handleSubmit}>ああああ</Button>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
+                {targetImage ? (
+                    <img src={targetImage} alt="Target Image" style={{ width: '45%', height: 'auto', borderRadius: '10px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)' }} />
+                ) : (
+                    <Typography sx={{ width: '45%' }}>画像がありません</Typography>
+                )}
+                {takePicture ? (
+                    <img src={takePicture} alt="Recent Picture" style={{ width: '45%', height: 'auto', borderRadius: '10px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)' }} />
+                ) : (
+                    <Typography sx={{ width: '45%' }}>画像がありません</Typography>
+                )}
+            </Box>
+            {highScoreAchieved ? (<Link href="mapShow">
+                <Button
+                    onClick={handleSubmit}
+                    variant="contained"
+                    startIcon={<CompareArrowsIcon />}
+                    sx={{ mt: 3, bgcolor: highScoreAchieved ? 'secondary.light' : 'primary.light', '&:hover': { bgcolor: highScoreAchieved ? 'secondary.main' : 'primary.main' } }}
+                >
+                    <Typography variant="h4" component="span">{highScoreAchieved ? '次に進む' : 'ぴっくるん！'}</Typography>
+                </Button>
+            </Link>
+            ) : <Button
+                onClick={handleSubmit}
+                variant="contained"
+                startIcon={<CompareArrowsIcon />}
+                sx={{ mt: 3, bgcolor: highScoreAchieved ? 'secondary.light' : 'primary.light', '&:hover': { bgcolor: highScoreAchieved ? 'secondary.main' : 'primary.main' } }}
+            >
+                <Typography variant="h4" component="span">{highScoreAchieved ? '次に進む' : 'ぴっくるん！'}</Typography>
+            </Button>}
         </Box>
-
     );
 }
