@@ -165,6 +165,14 @@ export default function MapComponent() {
         /*選択されたマーカー付近の写真*/
         setSelectedMarkerPicture(imageUrl);
     }
+    /*ピンを選択した時に動く関数*/
+    function handleChoice() {
+        console.log("このピンを選択する！", selectedPosition);
+        console.log(markers);
+        console.log(seed);
+        // ここにピンを選択したときの処理を追加
+        // markers...
+    }
 
     return (
         <div>
@@ -244,10 +252,7 @@ export default function MapComponent() {
                             pictureURL: selectedMarkerPicture,
                         }
                     }}>
-                        <Button variant="contained" color="primary" onClick={() => {
-                            console.log("このピンを選択する！", selectedPosition);
-                            // ここにピンを選択したときの処理を追加
-                        }}>
+                        <Button variant="contained" color="primary" onClick={() => { handleChoice }}>
                             <Typography variant="h6">このピンを選択する！</Typography>
                         </Button>
                     </Link>
