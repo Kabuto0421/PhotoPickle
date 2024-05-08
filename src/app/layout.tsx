@@ -1,3 +1,4 @@
+import NextAuthProvider from '@/providers/NextAuth'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
@@ -16,7 +17,9 @@ export default function RootLayout({
     <html lang="en" style={{ height: '100vh' }}>
       <body className={inter.className} style={{ overflow: 'auto', height: '100%' }}>
         <main style={{ marginTop: '8%', overflow: 'hidden', height: '90%'}} >
+        <NextAuthProvider>
           {children}
+        </NextAuthProvider>
         </main>
       </body>
     </html>

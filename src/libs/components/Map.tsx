@@ -15,12 +15,6 @@ const defaultMapContainerStyle = {
     borderRadius: '15px',
 };
 
-// マップのデフォルトの中心位置を定義（ここでは金沢の座標を使用）
-const defaultMapCenter = {
-    lat: 36.561325,
-    lng: 136.656205
-}
-
 // 位置とマーカーデータのためのTypeScriptインターフェース
 interface Location {
     lat: number;
@@ -60,8 +54,11 @@ const defaultMapOptions = {
 
 // Google Street Viewの画像を取得する関数
 function getStreetViewImage(location: Location, size: string = "400x400"): string {
-
-    return `https://maps.googleapis.com/maps/api/streetview?size=${size}&location=${location.lat},${location.lng}&key=AIzaSyCugBNLjCF_eyg39XDM7A6GMi_P6EtVSqg`;
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
+    if (!apiKey) {
+        throw new Error('Google Maps APIキーが設定されていません');
+    }
+    return `https://maps.googleapis.com/maps/api/streetview?size=${size}&location=${location.lat},${location.lng}&key=${apiKey}`;
 }
 
 // MapComponentの定義
@@ -71,21 +68,35 @@ export default function MapComponent() {
     const [selectedPosition, setSelectedPosition] = useState<Location | null>(null);
     const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null);
     const [selectedMarkerPicture, setSelectedMarkerPicture] = useState<string | null>(null);
+    const [mapCenter, setMapCenter] = useState({
+        lat: 0,
+        lng: 0
+    });
     const photoContext = context();
     // コンポーネントのマウント時にマーカーを追加する
     useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                setMapCenter({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                });
+            }, () => {
+                console.error("位置情報の取得に失敗しました。");
+            });
+        }
+    }, []);
+
+    useEffect(() => {
         const service = new google.maps.StreetViewService();
 
-        // 与えられた位置にStreet Viewが存在するかを確認する関数
         const checkStreetViewAvailability = (location: Location, radius: number): Promise<google.maps.LatLng | null> => {
             return new Promise(resolve => {
                 service.getPanorama({ location, radius }, (data, status) => {
                     if (status === google.maps.StreetViewStatus.OK) {
-                        // data.location.latLng が undefined ではないことを確認
                         if (data != null && data.location !== undefined && data.location.latLng !== undefined) {
                             resolve(data.location.latLng);
                         } else {
-                            // data.location.latLng が undefined の場合、null を resolve する
                             console.log("data.location.latLng is undefined");
                             resolve(null);
                         }
@@ -96,24 +107,27 @@ export default function MapComponent() {
             });
         };
 
-        // ランダムな位置にStreet Viewが存在するマーカーを10個追加する関数
         const addMarkers = async () => {
             const newMarkers: MarkerData[] = [];
-            while (newMarkers.length < 10) {
-                const randomLocation = getRandomLocation(defaultMapCenter, 5000);
-                const result = await checkStreetViewAvailability(randomLocation, 50);
-                if (result) {
-                    newMarkers.push({
-                        id: newMarkers.length,
-                        position: result.toJSON()
-                    });
+
+            if (mapCenter.lat !== 0 || mapCenter.lng !== 0) {
+                while (newMarkers.length < 10) {
+                    const randomLocation = getRandomLocation(mapCenter, 5000);
+                    const result = await checkStreetViewAvailability(randomLocation, 50);
+                    if (result) {
+                        newMarkers.push({
+                            id: newMarkers.length,
+                            position: result.toJSON()
+                        });
+                    }
                 }
+                setMarkers(newMarkers);
             }
-            setMarkers(newMarkers);
         };
 
         addMarkers();
-    }, []);
+    }, [mapCenter]);
+
 
     // マーカーをクリックした時に実行される関数
     function handleMarkerClick(markerId: number, position: Location) {
@@ -138,7 +152,7 @@ export default function MapComponent() {
         <div>
             <GoogleMap
                 mapContainerStyle={defaultMapContainerStyle}
-                center={defaultMapCenter}
+                center={mapCenter}
                 zoom={defaultMapZoom}
                 options={defaultMapOptions}
             >

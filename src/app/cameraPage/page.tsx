@@ -38,6 +38,7 @@ export default function CameraPage() {
     }, []);
 
 
+
     const takePhoto = () => {
         const video = refVideo.current;
         const canvas = document.createElement('canvas');
