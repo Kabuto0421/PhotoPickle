@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Grid, Typography, Box, Button } from '@mui/material';
 import { useSearchParams } from "next/navigation";
-import { useMixContext } from "next-approuter-context";
 import Link from 'next/link';
 const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
     const R = 6371; // 地球の半径(km)
