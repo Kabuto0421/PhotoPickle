@@ -10,9 +10,9 @@ const LoginPage = () => {
     <div className="flex flex-col justify-center items-center h-screen">
       {!session && (
         <Grid  container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
-          <Button onClick={() => signIn()} sx={{ mt: 2, mb: 2, width: 100 }} variant="contained" >
+          <Button onClick={() => signIn("google")} sx={{ mt: 2, mb: 2, width: 200 }} variant="contained">
             <Typography>
-              はじめる
+              Googleでログイン
             </Typography>
           </Button>
         </Grid>

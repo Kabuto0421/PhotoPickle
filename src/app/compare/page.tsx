@@ -16,7 +16,7 @@ export default function CameraPage() {
         console.log(image_url1)
         console.log(image_url2)
         try {
-            const response = await fetch('http://localhost:8080/compare-images', {
+            const response = await fetch('https://compare-images.onrender.com/compare-images', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
