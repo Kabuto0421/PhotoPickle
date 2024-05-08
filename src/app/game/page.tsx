@@ -135,18 +135,47 @@ export default function Game() {
 
                 <Grid container item xs={12} spacing={1} justifyContent="center" sx={{ mb: 1 }}>
                     <Grid item xs={7} md={6}>
-                        <Button variant="outlined" fullWidth sx={{ padding: '6px' }} onClick={handleCurrentPositionCheck}>
+                        <Button variant="contained" fullWidth onClick={handleCurrentPositionCheck}
+                            sx={{
+                                padding: '6px',
+                                backgroundColor: "#55645d", // ボタンの背景色を設定。
+                                color: "white", // ボタンのテキスト色を設定。
+                                '&:hover': {
+                                    backgroundColor: 'rgba(255, 161, 161, 0.8)', // ホバー時の背景色を少し明るくする
+                                    color: 'black'
+                                },
+                            }}
+                        >
                             <Typography variant="h6">現在の位置</Typography>
                         </Button>
                     </Grid>
                     <Grid item xs={5} md={6}>
-                        <Button variant="outlined" fullWidth sx={{ padding: '6px' }} onClick={handleRouteClick}>
+                        <Button variant="contained" fullWidth onClick={handleRouteClick}
+                            sx={{
+                                padding: '6px',
+                                backgroundColor: "#55645d", // ボタンの背景色を設定。
+                                color: "white", // ボタンのテキスト色を設定。
+                                '&:hover': {
+                                    backgroundColor: 'rgba(255, 161, 161, 0.8)', // ホバー時の背景色を少し明るくする
+                                    color: 'black'
+                                },
+                            }}
+                        >
                             <Typography variant="h6">経路</Typography>
                         </Button>
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                    <Button variant="contained" fullWidth sx={{ padding: '6px' }} href='cameraPage'>
+                    <Button variant="contained" fullWidth href='cameraPage'
+                        sx={{
+                            padding: '6px',
+                            backgroundColor: "#55645d", // ボタンの背景色を設定。
+                            color: "white", // ボタンのテキスト色を設定。
+                            '&:hover': {
+                                backgroundColor: 'rgba(255, 161, 161, 0.8)', // ホバー時の背景色を少し明るくする
+                                color: 'black'
+                            },
+                        }}>
                         <Typography variant="h6">写真を撮る</Typography>
                     </Button>
                 </Grid>
