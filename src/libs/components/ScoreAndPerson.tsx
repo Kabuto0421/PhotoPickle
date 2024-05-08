@@ -14,50 +14,45 @@ interface ScoreAndPersonIconProps {
 export default function ScoreAndPersonIcon({ score, iconStyle }: ScoreAndPersonIconProps) {
     return (
         // Gridコンテナを使って、子要素をレスポンシブに配置する。
-        <Grid container spacing={2} style={{ padding: '20px 0' }}>
+        <Grid container spacing={0} >
             {/* スコア表示部分 */}
-            <Grid item xs={9}>
+            <Grid item xs={8} sx={{ height: '10vh' }}>
                 <Box
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
-                    padding={2}
                     bgcolor="#F1D3B1" // 背景色を設定
-                    sx={{ borderRadius: '16px', textAlign: 'center', width: '100%' }} // スタイリングを適用
+                    sx={{ 
+                        borderRadius: '3px', 
+                        textAlign: 'center', 
+                        width: '100%', 
+                        height: '10vh' ,
+                    }} // スタイリングを適用
                 >
-                    <Typography
-                        variant="h3" // 文字サイズを大きくする
-                        component="div"
-                        sx={{
-                            fontWeight: 'bold', // 文字を太くする
-                            color: 'black', // 文字色を黒にする
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: '100%'
-                        }}
-                    >
                         {/* スコア値を表示 */}
-                        Score: <Box component="span" sx={{ marginLeft: 1 }}>{score}</Box>
-                    </Typography>
+                        Score: {score}
                 </Box>
             </Grid>
             {/* Personアイコンを表示するボタン */}
-            <Grid item xs={2.5}>
-                <Link href="/profile">
-                    <Button
-                        variant="contained" // ボタンスタイルを塗りつぶしに
-                        fullWidth // 幅いっぱいに展開
-                        size="large" // ボタンのサイズを大きくする
-                        sx={{
-                            backgroundColor: "#F1D3B1", // ボタンの背景色
-                            color: "black", // ボタン内のテキスト色
-                        }}
-                        >
-                        {/* iconStyleを適用したPersonアイコン */}
-                        <PersonIcon style={iconStyle} />
-                    </Button>
-                </Link>
+
+            <Grid item xs={4} paddingLeft={1} sx={{ height: '10vh' }}>
+             <Link href="/profile">
+                <Button
+                    variant="contained" // ボタンスタイルを塗りつぶしに
+                    sx={{
+                        backgroundColor: "#F1D3B1", // ボタンの背景色
+                        color: "black", // ボタン内のテキスト色
+                        width: '99%',
+                        height: '10vh',
+                        '&:hover': {
+                            backgroundColor: 'rgba(255, 161, 161, 0.8)', // ホバー時の背景色を少し明るくする
+                            color: 'black'
+                        },
+                    }}
+                >
+                    <PersonIcon style={iconStyle} />
+                </Button>
+                    </Link>
             </Grid>
         </Grid>
     );

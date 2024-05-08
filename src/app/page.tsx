@@ -20,14 +20,14 @@ export default function Home() {
             {/* 3つのボタンを横並びに表示するコンポーネント */}
             <ThreeButtons iconStyle={iconStyle} />
 
-
             <Box
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
                 bgcolor="#F1D3B1"
-                style={{ height: '500px', marginTop: '20px' }} // 余白を追加して見た目を整える
-                sx={{ borderRadius: '16px' }}
+                style={{ height: '60vh'}} // 余白を追加して見た目を整える
+                sx={{ borderRadius: '3px' }}
+                marginTop={1}
             >
                 {/* NextLinkでボタンを押した時にmapフォルダのページに遷移する */}
                 <NextLink href="/mapShow">
@@ -35,11 +35,12 @@ export default function Home() {
                         variant="contained"
                         startIcon={<PlayArrowIcon sx={iconStyle} />}
                         sx={{
-                            fontSize: '40px', // テキストのサイズを大きくする
+                            fontSize: '30px', // テキストのサイズを大きくする
                             backgroundColor: '#55645D', // ボタンの背景色を設定
                             color: 'white', // ボタンのテキスト色を白にする
                             '&:hover': {
-                                backgroundColor: 'rgba(85, 100, 93, 0.8)', // ホバー時の背景色を少し明るくする
+                                backgroundColor: 'rgba(255, 161, 161, 0.8)', // ホバー時の背景色を少し明るくする
+                                color: 'black'
                             },
                         }}
                     >
