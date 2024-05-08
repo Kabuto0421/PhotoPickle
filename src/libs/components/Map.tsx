@@ -4,7 +4,7 @@ we need to make this component client rendered as well*/
 import React, { useEffect, useState, useCallback } from 'react';
 //Map component Component from library
 import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, TextField } from '@mui/material';
 import { blue } from '@mui/material/colors';
 
 import Link from "next/link";
@@ -68,11 +68,29 @@ export default function MapComponent() {
     const [selectedPosition, setSelectedPosition] = useState<Location | null>(null);
     const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null);
     const [selectedMarkerPicture, setSelectedMarkerPicture] = useState<string | null>(null);
+    const [seed, setSeed] = useState('');
+
     const [mapCenter, setMapCenter] = useState({
         lat: 0,
         lng: 0
     });
     // コンポーネントのマウント時にマーカーを追加する
+    const handleSeedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSeed(event.target.value);
+    };
+
+    // Seed値を使用してマーカーを生成するハンドラ
+    const handleSubmitSeed = () => {
+        // Seed値を使用して何か処理を行う
+        console.log("Submitted Seed:", seed);
+        // ここでマーカーの位置を計算して更新するなどの処理を追加
+    };
+    useEffect(() => {
+        // 初期マウント時にランダムなseed値を生成
+        const array = new Uint32Array(1);
+        window.crypto.getRandomValues(array);
+        setSeed(array[0].toString());
+    }, []);
     useEffect(() => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(position => {
@@ -106,7 +124,6 @@ export default function MapComponent() {
                 });
             });
         };
-
         const addMarkers = async () => {
             const newMarkers: MarkerData[] = [];
 
@@ -128,11 +145,13 @@ export default function MapComponent() {
         addMarkers();
     }, [mapCenter]);
 
+
     function resetStorage() {
         localStorage.removeItem('targetImage');
         localStorage.removeItem('takePicture');
         //localStorage.removeItem('seed');
     }
+
     // マーカーをクリックした時に実行される関数
     function handleMarkerClick(markerId: number, position: Location) {
         // 選択された位置に基づいてStreet View画像のURLを取得
@@ -151,6 +170,15 @@ export default function MapComponent() {
         /*選択されたマーカー付近の写真*/
         setSelectedMarkerPicture(imageUrl);
     }
+    /*ピンを選択した時に動く関数*/
+    function handleChoice() {
+        console.log("このピンを選択する！", selectedPosition);
+        console.log(markers);
+        console.log(seed);
+        // ここにピンを選択したときの処理を追加
+        // markers...マーカーのIDとIDごとのマーカーの緯度経度が入ってる辞書型の変数
+        // seed...seed値
+    }
 
     return (
         <div>
@@ -167,7 +195,34 @@ export default function MapComponent() {
                         onClick={() => handleMarkerClick(marker.id, marker.position)}
                     />
                 ))}
-
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: 20,
+                        right: 20,
+                        zIndex: 1000, // Make sure it's above the map
+                        backgroundColor: 'white', // 背景色を白に設定
+                        padding: 1, // 内部のパディングを設定
+                        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', // 影を付ける
+                        borderRadius: '4px', // 角を丸くする
+                    }}
+                >
+                    <TextField
+                        label="Seed値"
+                        variant="outlined"
+                        value={seed}
+                        onChange={handleSeedChange}
+                        size="small"
+                    />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleSubmitSeed}
+                        sx={{ ml: 1 }}
+                    >
+                        更新
+                    </Button>
+                </Box>
                 {selectedMarkerId !== null && selectedPosition && (
                     <InfoWindow
                         position={{ lat: selectedPosition.lat, lng: selectedPosition.lng }}
@@ -203,10 +258,7 @@ export default function MapComponent() {
                             pictureURL: selectedMarkerPicture,
                         }
                     }}>
-                        <Button variant="contained" color="primary" onClick={() => {
-                            console.log("このピンを選択する！", selectedPosition);
-                            // ここにピンを選択したときの処理を追加
-                        }}>
+                        <Button variant="contained" color="primary" onClick={() => { handleChoice }}>
                             <Typography variant="h6">このピンを選択する！</Typography>
                         </Button>
                     </Link>

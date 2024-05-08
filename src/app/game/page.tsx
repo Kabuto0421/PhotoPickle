@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import { Grid, Typography, Box, Button } from '@mui/material';
+import { Grid, Typography, Box, Button, } from '@mui/material';
 import { useSearchParams } from "next/navigation";
 import Link from 'next/link';
 const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
@@ -31,11 +31,10 @@ export default function Game() {
 
     // スタイルを調整する
     const boxStyle = {
-        bgcolor: '#e0e0e0',
+        bgcolor: '#f1d3b1',
         padding: 1,
-        my: 1,
         borderRadius: 2,
-        textAlign: 'center',
+        mb: 1,
     };
 
     const handleCurrentPositionCheck = () => {
@@ -68,38 +67,38 @@ export default function Game() {
     return (
         <Box sx={{
             width: 1,
-            height: '100vh',
+            height: '100%',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between',
-            overflow: 'auto',
-        }}>
-            <Grid container spacing={0.5} sx={{ maxWidth: 450, mx: 'auto' }}>
+        }}
+            alignItems="center"
+        >
+            <Grid container sx={{ maxWidth: 450 }} justifyContent="center" alignItems="center">
                 <Grid item xs={12}>
-                    <Box sx={{ ...boxStyle, my: 1 }}>
-                        <Typography variant="h4" align="center">{place} スコア: {score}</Typography>
+                    <Box sx={{ ...boxStyle, height: '7vh', fontSize: '1.5rem' }} display="flex" alignItems="center" justifyContent="center">
+                        {place} スコア: {score}
                     </Box>
                 </Grid>
                 <Grid item xs={12}>
-                    <Box sx={boxStyle}>
-                        <Grid container>
-                            <Grid item xs={2}>
-                                <Typography variant="caption">目的地:</Typography>
+                    <Box sx={{ ...boxStyle, height: '9vh', paddingX: 2.5 }} display="flex" alignItems="center" justifyContent="center">
+                        <Grid container alignItems="center" sx={{ height: '100%' }}>
+                            <Grid item xs={2.5}>
+                                目的地
                             </Grid>
-                            <Grid item xs={10} >
-                                <Typography variant="caption">緯度: {lat}<br></br></Typography>
-                                <Typography variant="caption">経度: {lng}</Typography>
+                            <Grid item xs={9.5} >
+                                <Typography>緯度: {lat}<br></br></Typography>
+                                <Typography>経度: {lng}</Typography>
                             </Grid>
                         </Grid>
                     </Box>
                 </Grid>
 
-
                 <Grid item xs={12} justifyContent="center">
                     <Box sx={{
                         display: 'flex',
                         justifyContent: 'center', // This centers the content horizontally
-                        width: '100%' // Ensures the Box takes full width
+                        width: '100%', // Ensures the Box takes full width
+                        mb: 1,
                     }}>
                         <img
                             src={typeof pictureURL === 'string' ? pictureURL : '/default-image.jpg'}
@@ -112,42 +111,73 @@ export default function Game() {
                         />
                     </Box>
                 </Grid>
-                <Grid item xs={12}>
-                    <Box sx={boxStyle}>
-                        <Typography variant="h6">{distanceMessage}</Typography>
 
+                <Grid item xs={12}>
+                    <Box sx={{ ...boxStyle, height: '5vh', paddingX: 3 }} display="flex" alignItems="center" justifyContent="center">
+                        {/* <Typography variant="h6">{distanceMessage}</Typography> */}
+                        <Typography variant="h6">近いです</Typography>
                     </Box>
                 </Grid>
                 <Grid item xs={12}>
-                    <Box sx={boxStyle}>
-                        <Grid container>
-                            <Grid item xs={2}>
-                                <Typography variant="caption">現在地</Typography>
+                    <Box sx={{ ...boxStyle, height: '9vh' }} display="flex" alignItems="center" justifyContent="center">
+                        <Grid container alignItems="center" sx={{ height: '100%', paddingX: 1.5 }}>
+                            <Grid item xs={2.5}>
+                                現在地
                             </Grid>
-                            <Grid item xs={10} >
-                                <Typography variant="caption">緯度: {latitude}<br></br></Typography>
-                                <Typography variant="caption">経度:{longitude} </Typography>
+                            <Grid item xs={9.5} >
+                                <Typography>緯度: {latitude}<br></br></Typography>
+                                <Typography>経度: {longitude}</Typography>
                             </Grid>
                         </Grid>
                     </Box>
                 </Grid>
 
-
-                <Grid container item xs={12} justifyContent="center">
+                <Grid container item xs={12} spacing={1} justifyContent="center" sx={{ mb: 1 }}>
                     <Grid item xs={7} md={6}>
-                        <Button variant="outlined" fullWidth sx={{ padding: '6px' }} onClick={handleCurrentPositionCheck}><Typography variant="h6">現在の位置</Typography></Button>
+                        <Button variant="contained" fullWidth onClick={handleCurrentPositionCheck}
+                            sx={{
+                                padding: '6px',
+                                backgroundColor: "#55645d", // ボタンの背景色を設定。
+                                color: "white", // ボタンのテキスト色を設定。
+                                '&:hover': {
+                                    backgroundColor: 'rgba(255, 161, 161, 0.8)', // ホバー時の背景色を少し明るくする
+                                    color: 'black'
+                                },
+                            }}
+                        >
+                            <Typography variant="h6">現在の位置</Typography>
+                        </Button>
                     </Grid>
                     <Grid item xs={5} md={6}>
-                        <Button variant="outlined" fullWidth sx={{ padding: '6px' }} onClick={handleRouteClick}>
+                        <Button variant="contained" fullWidth onClick={handleRouteClick}
+                            sx={{
+                                padding: '6px',
+                                backgroundColor: "#55645d", // ボタンの背景色を設定。
+                                color: "white", // ボタンのテキスト色を設定。
+                                '&:hover': {
+                                    backgroundColor: 'rgba(255, 161, 161, 0.8)', // ホバー時の背景色を少し明るくする
+                                    color: 'black'
+                                },
+                            }}
+                        >
                             <Typography variant="h6">経路</Typography>
                         </Button>
                     </Grid>
                 </Grid>
-                <Link href="cameraPage">
-                    <Grid item xs={12}>
-                        <Button variant="contained" fullWidth sx={{ padding: '6px' }}><Typography variant="h6">写真を撮る</Typography></Button>
-                    </Grid>
-                </Link>
+                <Grid item xs={12}>
+                    <Button variant="contained" fullWidth href='cameraPage'
+                        sx={{
+                            padding: '6px',
+                            backgroundColor: "#55645d", // ボタンの背景色を設定。
+                            color: "white", // ボタンのテキスト色を設定。
+                            '&:hover': {
+                                backgroundColor: 'rgba(255, 161, 161, 0.8)', // ホバー時の背景色を少し明るくする
+                                color: 'black'
+                            },
+                        }}>
+                        <Typography variant="h6">写真を撮る</Typography>
+                    </Button>
+                </Grid>
             </Grid>
         </Box>
     );
