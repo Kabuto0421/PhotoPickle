@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import { Grid, Typography, Box, Button } from '@mui/material';
+import { Grid, Typography, Box, Button, } from '@mui/material';
 import { useSearchParams } from "next/navigation";
 import { useMixContext } from "next-approuter-context";
 import Link from 'next/link';
@@ -32,11 +32,10 @@ export default function Game() {
 
     // スタイルを調整する
     const boxStyle = {
-        bgcolor: '#e0e0e0',
+        bgcolor: '#f1d3b1',
         padding: 1,
         borderRadius: 2,
         mb: 1,
-        textAlign: 'center',
     };
 
     const handleCurrentPositionCheck = () => {
@@ -74,23 +73,22 @@ export default function Game() {
             flexDirection: 'column',
         }}
             alignItems="center"
-            justifyContent="center"
         >
             <Grid container sx={{ maxWidth: 450 }} justifyContent="center" alignItems="center">
                 <Grid item xs={12}>
-                    <Box sx={{ ...boxStyle, height: '5vh' }}>
-                        <Typography variant="h5" align="center">{place} スコア: {score}</Typography>
+                    <Box sx={{ ...boxStyle, height: '7vh', fontSize: '1.5rem' }} display="flex" alignItems="center" justifyContent="center">
+                        {place} スコア: {score}
                     </Box>
                 </Grid>
                 <Grid item xs={12}>
-                    <Box sx={{ ...boxStyle, height: '9vh'}}>
-                        <Grid container>
-                            <Grid item xs={2}>
-                                <Typography variant="caption">目的地:</Typography>
+                    <Box sx={{ ...boxStyle, height: '9vh', paddingX: 2.5 }} display="flex" alignItems="center" justifyContent="center">
+                        <Grid container alignItems="center" sx={{ height: '100%' }}>
+                            <Grid item xs={2.5}>
+                                目的地
                             </Grid>
-                            <Grid item xs={10} >
-                                <Typography variant="caption">緯度: {lat}<br></br></Typography>
-                                <Typography variant="caption">経度: {lng}</Typography>
+                            <Grid item xs={9.5} >
+                                <Typography>緯度: {lat}<br></br></Typography>
+                                <Typography>経度: {lng}</Typography>
                             </Grid>
                         </Grid>
                     </Box>
@@ -116,26 +114,26 @@ export default function Game() {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <Box sx={{ ...boxStyle, height: '8vh'}}>
+                    <Box sx={{ ...boxStyle, height: '5vh', paddingX: 3 }} display="flex" alignItems="center" justifyContent="center">
                         {/* <Typography variant="h6">{distanceMessage}</Typography> */}
                         <Typography variant="h6">近いです</Typography>
                     </Box>
                 </Grid>
                 <Grid item xs={12}>
-                    <Box sx={{ ...boxStyle, height: '9vh'}}>
-                        <Grid container>
-                            <Grid item xs={2} >
-                                <Typography variant="caption">現在地</Typography>
+                    <Box sx={{ ...boxStyle, height: '9vh' }} display="flex" alignItems="center" justifyContent="center">
+                        <Grid container alignItems="center" sx={{ height: '100%', paddingX: 1.5 }}>
+                            <Grid item xs={2.5}>
+                                現在地
                             </Grid>
-                            <Grid item xs={10} >
-                                <Typography variant="caption">緯度: {latitude}<br></br></Typography>
-                                <Typography variant="caption">経度:{longitude} </Typography>
+                            <Grid item xs={9.5} >
+                                <Typography>緯度: {latitude}<br></br></Typography>
+                                <Typography>経度: {longitude}</Typography>
                             </Grid>
                         </Grid>
                     </Box>
                 </Grid>
 
-                <Grid container item xs={12} spacing={1} justifyContent="center" sx={{mb: 1}}>
+                <Grid container item xs={12} spacing={1} justifyContent="center" sx={{ mb: 1 }}>
                     <Grid item xs={7} md={6}>
                         <Button variant="outlined" fullWidth sx={{ padding: '6px' }} onClick={handleCurrentPositionCheck}>
                             <Typography variant="h6">現在の位置</Typography>
