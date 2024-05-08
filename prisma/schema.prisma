@@ -56,7 +56,7 @@ model VerificationToken {
 model Match {
   id           String    @id @default(cuid())
   userId       String
-  createdAt    DateTime
+  createdAt    DateTime  @default(now())
   Seed         String
   user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   matchPins    MatchPin[]
