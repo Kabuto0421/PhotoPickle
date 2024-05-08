@@ -171,7 +171,8 @@ export default function MapComponent() {
         console.log(markers);
         console.log(seed);
         // ここにピンを選択したときの処理を追加
-        // markers...
+        // markers...マーカーのIDとIDごとのマーカーの緯度経度が入ってる辞書型の変数
+        // seed...seed値
     }
 
     return (
