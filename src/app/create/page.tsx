@@ -2,11 +2,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, IconButton } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import { useMixContext } from "next-approuter-context";
 import Link from 'next/link';
 export default function CameraPage() {
     const refVideo = useRef<HTMLVideoElement>(null);
     const [photo, setPhoto] = useState<string | undefined>(undefined);
     const [capturing, setCapturing] = useState(true);
+
 
     useEffect(() => {
         const constraints = {
@@ -68,7 +70,7 @@ export default function CameraPage() {
 
             // canvas を画像データURLとしてエクスポート
             const image = canvas.toDataURL('image/png');
-            localStorage.setItem('takePicture', image);
+            localStorage.setItem("targetImage", image)
             setPhoto(image);
             video.pause();
             setCapturing(false);

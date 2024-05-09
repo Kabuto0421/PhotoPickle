@@ -2,19 +2,26 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Typography, IconButton } from '@mui/material';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-import { context } from '../context';
 import Image from 'next/image';
 import { truncate } from 'fs';
 import Link from 'next/link';
 export default function ComparePage() {
-    const ctx = context();
-    const targetImage = ctx.get().targetImage;
-    const takePicture = ctx.get().takePicture;
+    const [targetImage, setTargetImage] = useState<string>("");
+    const [takePicture, setTakePicture] = useState<string>("");
+
     const [matchRate, setMatchRate] = useState<number>(Math.random() * 100);
     const [highScoreAchieved, setHighScoreAchieved] = useState<boolean>(false);
     const [intervalId, setIntervalId] = useState<NodeJS.Timeout | number | undefined>(undefined);
 
     useEffect(() => {
+        const storedTargetImage = localStorage.getItem('targetImage');
+        if (storedTargetImage) {
+            setTargetImage(storedTargetImage);
+        }
+        const storedTakePicture = localStorage.getItem('takePicture');
+        if (storedTakePicture) {
+            setTakePicture(storedTakePicture);
+        }
         const id = setInterval(() => {
             setMatchRate(Math.random() * 100);
         }, 100);
@@ -65,7 +72,9 @@ export default function ComparePage() {
         if (highScoreAchieved) {
             // スコアが90以上で「次に進む」の処理
             // ここに次のステップに進むためのコードを書く
-            ctx.set({ targetImage: "", takePicture: "" })
+            localStorage.removeItem('targetImage');
+            localStorage.removeItem('takePicture');
+            console.log("ローカルストレージから画像データが削除されました。");
             console.log("次に進む処理を実行");
         } else {
             // 通常の「ぴっくるん！」の処理

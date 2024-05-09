@@ -6,7 +6,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 import { Box, Button, Typography, TextField } from '@mui/material';
 import { blue } from '@mui/material/colors';
-import { context } from '@/app/context';
+
 import Link from "next/link";
 // Googleマップのスタイルを定義
 const defaultMapContainerStyle = {
@@ -74,7 +74,6 @@ export default function MapComponent() {
         lat: 0,
         lng: 0
     });
-    const photoContext = context();
     // コンポーネントのマウント時にマーカーを追加する
     const handleSeedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSeed(event.target.value);
@@ -106,6 +105,7 @@ export default function MapComponent() {
     }, []);
 
     useEffect(() => {
+        resetStorage();
         const service = new google.maps.StreetViewService();
 
         const checkStreetViewAvailability = (location: Location, radius: number): Promise<google.maps.LatLng | null> => {
@@ -146,12 +146,17 @@ export default function MapComponent() {
     }, [mapCenter]);
 
 
+    function resetStorage() {
+        localStorage.removeItem('targetImage');
+        localStorage.removeItem('takePicture');
+        //localStorage.removeItem('seed');
+    }
 
     // マーカーをクリックした時に実行される関数
     function handleMarkerClick(markerId: number, position: Location) {
         // 選択された位置に基づいてStreet View画像のURLを取得
         const imageUrl = getStreetViewImage(position);
-        photoContext.set({ targetImage: imageUrl })
+        localStorage.setItem('targetImage', imageUrl);
         // コンソールに画像のURLを表示
 
 
