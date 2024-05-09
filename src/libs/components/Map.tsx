@@ -175,11 +175,26 @@ export default function MapComponent() {
         console.log("このピンを選択する！", selectedPosition);
         console.log(markers);
         console.log(seed);
-        // ここにピンを選択したときの処理を追加
-        // markers...マーカーのIDとIDごとのマーカーの緯度経度が入ってる辞書型の変数
-        // seed...seed値
-    }
 
+        const requestBody = {
+            seed: seed,
+            locations: markers.map(marker => marker.position)
+        };
+        fetch('api/match/seed', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("サーバーからの応答:", data);
+            })
+            .catch(error => {
+                console.error('APIリクエスト中にエラーが発生', error);
+            });
+    }
     return (
         <div>
             <GoogleMap
