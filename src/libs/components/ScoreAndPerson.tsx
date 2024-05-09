@@ -56,7 +56,7 @@ export default function ScoreAndPersonIcon({ score, iconStyle }: ScoreAndPersonI
                             },
                         }}
                     >
-                        <img src={session?.user?.image ?? ''} width={80} height={80} />
+                        <img src={session?.user?.image ?? ''} width={50} height={50} style={{ borderRadius: '50%' }}/>
                     </Button>
                 </Link>
             </Grid>
