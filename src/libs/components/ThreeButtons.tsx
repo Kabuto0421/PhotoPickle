@@ -35,20 +35,23 @@ export default function ThreeButtons({ iconStyle }: ThreeButtonsProps) {
                 </Link>
             </Grid>
             {/* スポーツエスポーツアイコンボタン */}
+
             <Grid item xs={4} padding={0} sx={{ height: '100%' }}>
-                <Button
-                    variant="contained"
-                    startIcon={<SportsEsportsIcon style={iconStyle} />}
-                    fullWidth
-                    sx={{
-                        backgroundColor: "#437b8d",
-                        color: "white",
-                        '&:hover': {
-                            backgroundColor: 'rgba(241, 172, 23, 0.8)', // ホバー時の背景色を少し明るくする
-                            color: 'black'
-                        },
-                    }}
-                />
+                <Link href="/">
+                    <Button
+                        variant="contained"
+                        startIcon={<SportsEsportsIcon style={iconStyle} />}
+                        fullWidth
+                        sx={{
+                            backgroundColor: "#437b8d",
+                            color: "white",
+                            '&:hover': {
+                                backgroundColor: 'rgba(241, 172, 23, 0.8)', // ホバー時の背景色を少し明るくする
+                                color: 'black'
+                            },
+                        }}
+                    />
+                </Link>
             </Grid>
             {/* 履歴アイコンボタン */}
             <Grid item xs={4} paddingLeft={1} sx={{ height: '100%' }}>
