@@ -33,6 +33,7 @@ export default function ComparePage() {
         try {
             const response = await fetch('https://compare-images.onrender.com/compare-images', {
                 method: 'POST',
+                mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },
