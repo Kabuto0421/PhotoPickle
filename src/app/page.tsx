@@ -24,7 +24,7 @@ export default function Home() {
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
-                bgcolor="#F1D3B1"
+                bgcolor="#437b8d"
                 style={{ height: '60vh'}} // 余白を追加して見た目を整える
                 sx={{ borderRadius: '3px' }}
                 marginTop={1}
@@ -36,10 +36,10 @@ export default function Home() {
                         startIcon={<PlayArrowIcon sx={iconStyle} />}
                         sx={{
                             fontSize: '30px', // テキストのサイズを大きくする
-                            backgroundColor: '#55645D', // ボタンの背景色を設定
-                            color: 'white', // ボタンのテキスト色を白にする
+                            backgroundColor: '#f5e795', // ボタンの背景色を設定
+                            color: 'black', // ボタンのテキスト色を白にする
                             '&:hover': {
-                                backgroundColor: 'rgba(255, 161, 161, 0.8)', // ホバー時の背景色を少し明るくする
+                                backgroundColor: 'rgba(241, 172, 23, 0.8)', // ホバー時の背景色を少し明るくする
                                 color: 'black'
                             },
                         }}

@@ -34,10 +34,11 @@ function GameContent() {
 
     // スタイルを調整する
     const boxStyle = {
-        bgcolor: '#f1d3b1',
+        bgcolor: '#437b8d',
         padding: 1,
         borderRadius: 2,
         mb: 1,
+        color: "white",
     };
 
     const handleCurrentPositionCheck = () => {
@@ -172,10 +173,10 @@ function GameContent() {
                             onClick={handleCurrentPositionCheck}
                             sx={{
                                 padding: '6px',
-                                backgroundColor: '#55645d', // ボタンの背景色を設定。
-                                color: 'white', // ボタンのテキスト色を設定。
+                                backgroundColor: '#f5e795', // ボタンの背景色を設定。
+                                color: 'black', // ボタンのテキスト色を設定。
                                 '&:hover': {
-                                    backgroundColor: 'rgba(255, 161, 161, 0.8)', // ホバー時の背景色を少し明るくする
+                                    backgroundColor: 'rgba(241, 172, 23, 0.8)', // ホバー時の背景色を少し明るくする
                                     color: 'black',
                                 },
                             }}
@@ -190,10 +191,10 @@ function GameContent() {
                             onClick={handleRouteClick}
                             sx={{
                                 padding: '6px',
-                                backgroundColor: '#55645d', // ボタンの背景色を設定。
-                                color: 'white', // ボタンのテキスト色を設定。
+                                backgroundColor: '#f5e795', // ボタンの背景色を設定。
+                                color: 'black', // ボタンのテキスト色を設定。
                                 '&:hover': {
-                                    backgroundColor: 'rgba(255, 161, 161, 0.8)', // ホバー時の背景色を少し明るくする
+                                    backgroundColor: 'rgba(241, 172, 23, 0.8)', // ホバー時の背景色を少し明るくする
                                     color: 'black',
                                 },
                             }}
@@ -209,10 +210,10 @@ function GameContent() {
                         href='cameraPage'
                         sx={{
                             padding: '6px',
-                            backgroundColor: '#55645d', // ボタンの背景色を設定。
-                            color: 'white', // ボタンのテキスト色を設定。
+                            backgroundColor: '#f5e795', // ボタンの背景色を設定。
+                            color: 'black', // ボタンのテキスト色を設定。
                             '&:hover': {
-                                backgroundColor: 'rgba(255, 161, 161, 0.8)', // ホバー時の背景色を少し明るくする
+                                backgroundColor: 'rgba(241, 172, 23, 0.8)', // ホバー時の背景色を少し明るくする
                                 color: 'black',
                             },
                         }}

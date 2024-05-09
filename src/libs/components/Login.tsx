@@ -33,7 +33,7 @@ const Login = () => {
       minHeight: '100vh',     // 最小の高さをビューポートの100%にする
       justifyContent: 'center'
     }}>
-      <Box sx={{ backgroundColor: '#F1D3B1', padding: 2, borderRadius: '8px' }}>
+      <Box sx={{ backgroundColor: '#437b8d', padding: 2, borderRadius: '8px' }}>
         <form style={{ marginTop: '20px' }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -62,7 +62,7 @@ const Login = () => {
                 fullWidth
                 variant="contained"
                 color="primary"
-                style={{ backgroundColor: '#55645D' }}  // ボタンの背景色を設定
+                style={{ backgroundColor: '#f5e795' }}  // ボタンの背景色を設定
               >
                 ログイン
               </Button>
