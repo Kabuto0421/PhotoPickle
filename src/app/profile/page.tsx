@@ -18,8 +18,8 @@ export default function ProfilePage() {
         <CardContent style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop:0, paddingBottom:3 }}>
           <h1>プロフィール</h1>
         </CardContent>
-        <CardContent sx={{ paddingY: 0  }}>
-          <img src={session?.user?.image ?? ''} width={90} height={90} />
+        <CardContent sx={{ paddingY: 0  }} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          <img src={session?.user?.image ?? ''} width={90} height={90} style={{ borderRadius: '50%' }}/>
         </CardContent>
         <CardContent>
           <p>名前：{session?.user?.name}</p>
