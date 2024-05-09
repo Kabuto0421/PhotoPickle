@@ -1,3 +1,4 @@
+'use client'
 // ReactとCSSProperties型をインポートする。
 import React, { CSSProperties } from 'react';
 // MUIから必要なコンポーネントとアイコンをインポートする。
@@ -10,9 +11,13 @@ import Link from 'next/link';
 interface ThreeButtonsProps {
     iconStyle: CSSProperties; // アイコンに適用されるスタイルの型。
 }
+import { usePathname } from 'next/navigation';
+
 
 // ThreeButtonsコンポーネント本体。
 export default function ThreeButtons({ iconStyle }: ThreeButtonsProps) {
+    const pathname = usePathname();
+
     return (
         // ボタンを水平に並べるためのGridコンテナ。
         <Grid container spacing={0} justifyContent="center" alignItems="center" paddingTop={1}>
@@ -24,10 +29,10 @@ export default function ThreeButtons({ iconStyle }: ThreeButtonsProps) {
                         startIcon={<DnsIcon style={iconStyle} />} // アイコンとしてDnsIconを使用し、propsから受け取ったスタイルを適用。
                         fullWidth // ボタンの幅をGridアイテムの幅いっぱいに設定。
                         sx={{
-                            backgroundColor: "#437b8d", // ボタンの背景色を設定。
-                            color: "white", // ボタンのテキスト色を設定。
+                            backgroundColor: pathname === '/create' ? '#f4bd45' : '#437b8d', // ボタンの背景色を設定。
+                            color: pathname === '/create' ? 'black' : 'white', // ボタンのテキスト色を設定。
                             '&:hover': {
-                                backgroundColor: 'rgba(241, 172, 23, 0.8)', // ホバー時の背景色を少し明るくする
+                                backgroundColor: 'rgba(241, 172, 23, 0.8)', // ホバー時の背景色を少し明るくする 
                                 color: 'black'
                             },
                         }}
@@ -43,8 +48,8 @@ export default function ThreeButtons({ iconStyle }: ThreeButtonsProps) {
                         startIcon={<SportsEsportsIcon style={iconStyle} />}
                         fullWidth
                         sx={{
-                            backgroundColor: "#437b8d",
-                            color: "white",
+                            backgroundColor: pathname === '/' ? '#f4bd45' : '#437b8d', // ボタンの背景色を設定。
+                            color: pathname === '/' ? 'black' : 'white', // ボタンのテキスト色を設定。
                             '&:hover': {
                                 backgroundColor: 'rgba(241, 172, 23, 0.8)', // ホバー時の背景色を少し明るくする
                                 color: 'black'
@@ -60,8 +65,8 @@ export default function ThreeButtons({ iconStyle }: ThreeButtonsProps) {
                     startIcon={<HistoryIcon style={iconStyle} />}
                     fullWidth
                     sx={{
-                        backgroundColor: "#437b8d",
-                        color: "white",
+                        backgroundColor: '#437b8d', // ボタンの背景色を設定。
+                        color: 'white', // ボタンのテキスト色を設定。
                         '&:hover': {
                             backgroundColor: 'rgba(241, 172, 23, 0.8)', // ホバー時の背景色を少し明るくする
                             color: 'black'
