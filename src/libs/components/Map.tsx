@@ -171,29 +171,33 @@ export default function MapComponent() {
         setSelectedMarkerPicture(imageUrl);
     }
     /*ピンを選択した時に動く関数*/
-    function handleChoice() {
+    async function handleChoice() {
         console.log("このピンを選択する！", selectedPosition);
         console.log(markers);
         console.log(seed);
 
-        const requestBody = {
-            seed: seed,
-            locations: markers.map(marker => marker.position)
-        };
-        fetch('api/match/seed', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log("サーバーからの応答:", data);
-            })
-            .catch(error => {
-                console.error('APIリクエスト中にエラーが発生', error);
+        // マーカーの位置データをサーバーに送信
+        try {
+            const response = await fetch('/api/match/seed', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    seed,
+                    markers: markers.map(marker => marker.position)
+                })
             });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('API Response:', result);
+            } else {
+                console.error('API Error:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Fetch Error:', error);
+        }
     }
     return (
         <div>
