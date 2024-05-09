@@ -8,7 +8,7 @@ export default function CameraPage() {
     const refVideo = useRef<HTMLVideoElement>(null);
     const [photo, setPhoto] = useState<string | undefined>(undefined);
     const [capturing, setCapturing] = useState(true);
-    const [stream, setStream] = useState<MediaStream | null>(null); // ストリームを状態として保持
+    const [stream, setStream] = useState<MediaStream | null>(null); //ストリームを状態として保持
 
     useEffect(() => {
         const constraints = {
