@@ -2,13 +2,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, IconButton } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import { useMixContext } from "next-approuter-context";
 import Link from 'next/link';
+
+interface PhotoData {
+    image: string;
+    latitude?: number;
+    longitude?: number;
+    timestamp?: number;
+}
+
 export default function CameraPage() {
     const refVideo = useRef<HTMLVideoElement>(null);
-    const [photo, setPhoto] = useState<string | undefined>(undefined);
+    const [photoData, setPhotoData] = useState<PhotoData | undefined>(undefined);
     const [capturing, setCapturing] = useState(true);
-
+    const [position, setPosition] = useState<{ latitude: number; longitude: number } | undefined>(undefined);
+    const [error, setError] = useState<string | undefined>(undefined);
 
     useEffect(() => {
         const constraints = {
@@ -34,9 +42,24 @@ export default function CameraPage() {
                 console.error("メディアデバイスのアクセスにエラーが発生しました: ", err);
                 alert("カメラへのアクセスを許可してください。");
             });
+
+        // 現在の位置情報を取得
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    setPosition({
+                        latitude: pos.coords.latitude,
+                        longitude: pos.coords.longitude
+                    });
+                },
+                (err) => {
+                    setError(`位置情報の取得に失敗しました: ${err.message}`);
+                }
+            );
+        } else {
+            setError("位置情報がこのデバイスでサポートされていません。");
+        }
     }, []);
-
-
 
     const takePhoto = () => {
         const video = refVideo.current;
@@ -70,8 +93,16 @@ export default function CameraPage() {
 
             // canvas を画像データURLとしてエクスポート
             const image = canvas.toDataURL('image/png');
-            localStorage.setItem("targetImage", image)
-            setPhoto(image);
+            const timestamp = Date.now();
+            const newPhotoData: PhotoData = {
+                image,
+                latitude: position?.latitude,
+                longitude: position?.longitude,
+                timestamp
+            };
+
+            localStorage.setItem("targetImage", JSON.stringify(newPhotoData));
+            setPhotoData(newPhotoData);
             video.pause();
             setCapturing(false);
         }
@@ -81,7 +112,7 @@ export default function CameraPage() {
         if (refVideo.current) {
             refVideo.current.play().catch(err => console.error("Video play failed on reset: ", err));
         }
-        setPhoto(undefined);
+        setPhotoData(undefined);
         setCapturing(true);
     };
 
@@ -90,7 +121,7 @@ export default function CameraPage() {
             {capturing ? (
                 <video ref={refVideo} autoPlay playsInline width="400" height="400" />
             ) : (
-                <img src={photo} alt="Captured" style={{ width: "400", height: "400", objectFit: 'cover' }} />
+                <img src={photoData?.image} alt="Captured" style={{ width: "400", height: "400", objectFit: 'cover' }} />
             )}
             {capturing ? (
                 <IconButton
@@ -110,9 +141,14 @@ export default function CameraPage() {
             ) : (
                 <div style={{ position: 'absolute', bottom: 20, right: 'calc(50% - 140px)' }}>
                     <Button variant="contained" onClick={resetCamera} sx={{ margin: 1 }}>撮り直す</Button>
-                    <Link href="/compare" >
+                    <Link href="/compare">
                         <Button variant="contained" onClick={() => console.log('次へ進む')} sx={{ margin: 1 }}>次へ進む</Button>
                     </Link>
+                </div>
+            )}
+            {error && (
+                <div style={{ position: 'absolute', top: 10, left: 10, backgroundColor: 'rgba(0,0,0,0.5)', color: 'white', padding: '10px', borderRadius: '5px' }}>
+                    {error}
                 </div>
             )}
             <canvas style={{ display: 'none' }} />
