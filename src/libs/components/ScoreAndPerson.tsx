@@ -1,8 +1,11 @@
+'use client'
 // ReactとそのCSSProperties型、そして必要なMUIコンポーネントをインポートする。
 import React, { CSSProperties } from 'react';
 import { Grid, Box, Typography, Button } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import Link from 'next/link';
+import { useSession } from "next-auth/react";
+
 
 // ScoreAndPersonIconコンポーネントのpropsの型を定義する。
 interface ScoreAndPersonIconProps {
@@ -12,6 +15,8 @@ interface ScoreAndPersonIconProps {
 
 // ScoreAndPersonIconコンポーネント本体。propsとしてscoreとiconStyleを受け取る。
 export default function ScoreAndPersonIcon({ score, iconStyle }: ScoreAndPersonIconProps) {
+    const { data: session } = useSession({ required: true });
+
     return (
         // Gridコンテナを使って、子要素をレスポンシブに配置する。
         <Grid container spacing={0} >
@@ -22,38 +27,38 @@ export default function ScoreAndPersonIcon({ score, iconStyle }: ScoreAndPersonI
                     alignItems="center"
                     justifyContent="center"
                     bgcolor="#437b8d" // 背景色を設定
-                    sx={{ 
-                        borderRadius: '3px', 
-                        textAlign: 'center', 
-                        width: '100%', 
-                        height: '10vh' ,
+                    sx={{
+                        borderRadius: '3px',
+                        textAlign: 'center',
+                        width: '100%',
+                        height: '10vh',
                         color: "white"
                     }} // スタイリングを適用
                 >
-                        {/* スコア値を表示 */}
-                        Score: {score}
+                    {/* スコア値を表示 */}
+                    Score: {score}
                 </Box>
             </Grid>
             {/* Personアイコンを表示するボタン */}
 
             <Grid item xs={4} paddingLeft={1} sx={{ height: '10vh' }}>
-             <Link href="/profile">
-                <Button
-                    variant="contained" // ボタンスタイルを塗りつぶしに
-                    sx={{
-                        backgroundColor: "#437b8d", // ボタンの背景色
-                        color: "white", // ボタン内のテキスト色
-                        width: '99%',
-                        height: '10vh',
-                        '&:hover': {
-                            backgroundColor: 'rgba(241, 172, 23, 0.8)', // ホバー時の背景色を少し明るくする
-                            color: 'black'
-                        },
-                    }}
-                >
-                    <PersonIcon style={iconStyle} />
-                </Button>
-                    </Link>
+                <Link href="/profile">
+                    <Button
+                        variant="contained" // ボタンスタイルを塗りつぶしに
+                        sx={{
+                            backgroundColor: "#437b8d", // ボタンの背景色
+                            color: "white", // ボタン内のテキスト色
+                            width: '99%',
+                            height: '10vh',
+                            '&:hover': {
+                                backgroundColor: 'rgba(241, 172, 23, 0.8)', // ホバー時の背景色を少し明るくする
+                                color: 'black'
+                            },
+                        }}
+                    >
+                        <img src={session?.user?.image ?? ''} width={80} height={80} />
+                    </Button>
+                </Link>
             </Grid>
         </Grid>
     );
