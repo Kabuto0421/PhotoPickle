@@ -21,12 +21,13 @@ export default function ScoreAndPersonIcon({ score, iconStyle }: ScoreAndPersonI
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
-                    bgcolor="#F1D3B1" // 背景色を設定
+                    bgcolor="#437b8d" // 背景色を設定
                     sx={{ 
                         borderRadius: '3px', 
                         textAlign: 'center', 
                         width: '100%', 
                         height: '10vh' ,
+                        color: "white"
                     }} // スタイリングを適用
                 >
                         {/* スコア値を表示 */}
@@ -40,12 +41,12 @@ export default function ScoreAndPersonIcon({ score, iconStyle }: ScoreAndPersonI
                 <Button
                     variant="contained" // ボタンスタイルを塗りつぶしに
                     sx={{
-                        backgroundColor: "#F1D3B1", // ボタンの背景色
-                        color: "black", // ボタン内のテキスト色
+                        backgroundColor: "#437b8d", // ボタンの背景色
+                        color: "white", // ボタン内のテキスト色
                         width: '99%',
                         height: '10vh',
                         '&:hover': {
-                            backgroundColor: 'rgba(255, 161, 161, 0.8)', // ホバー時の背景色を少し明るくする
+                            backgroundColor: 'rgba(241, 172, 23, 0.8)', // ホバー時の背景色を少し明るくする
                             color: 'black'
                         },
                     }}
