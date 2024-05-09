@@ -136,15 +136,23 @@ export default function CameraPage() {
             }
         });
     };
+    const generateSeed = (length = 8) => {
+        const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-={}[]<>?';
+        let seed = '';
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * charset.length);
+            seed += charset[randomIndex];
+        }
+        return seed;
+    };
+
+    // 使用例
 
     const handleModalClose = () => {
         setModalOpen(false);
         setMapOpen(true);
 
-        // Generate a complex seed value based on selected photos and their geolocation data
-        const newSeed = selectedPhotos
-            .map(p => `${p.latitude},${p.longitude},${p.image}`)
-            .join('|');
+        const newSeed = generateSeed(8);  // 32ビット ≈ 8文字
         setSeed(newSeed);
     };
 
