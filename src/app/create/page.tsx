@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import React, { useState, useEffect, useRef } from 'react';
 import NextLink from 'next/link';
 import { Container, Box, Button, IconButton, Grid, Modal, Checkbox, Typography } from '@mui/material';
@@ -8,26 +8,27 @@ import ScoreAndPersonIcon from '@/libs/components/ScoreAndPerson';
 import ThreeButtons from '@/libs/components/ThreeButtons';
 import MapProvider from '@/providers/map-provider';
 import MapComponent from '@/libs/components/Map';
+
 interface PhotoData {
     image: string;
     latitude?: number;
     longitude?: number;
 }
 
+// Adjusted mockPhotos to include geolocation data
 const mockPhotos = [
-    'https://via.placeholder.com/400x400/FF0000',
-    'https://via.placeholder.com/400x400/00FF00',
-    'https://via.placeholder.com/400x400/0000FF',
-    'https://via.placeholder.com/400x400/FFFF00',
-    'https://via.placeholder.com/400x400/FF00FF',
-    'https://via.placeholder.com/400x400/00FFFF',
-    'https://via.placeholder.com/400x400/FFFFFF',
-    'https://via.placeholder.com/400x400/000000',
-    'https://via.placeholder.com/400x400/123456',
-    'https://via.placeholder.com/400x400/654321',
-    'https://via.placeholder.com/400x400/ABCDEF',
-    'https://via.placeholder.com/400x400/13579B',
-
+    { url: 'https://via.placeholder.com/400x400/FF0000', latitude: 35.6895, longitude: 139.6917 },
+    { url: 'https://via.placeholder.com/400x400/00FF00', latitude: 34.0522, longitude: -118.2437 },
+    { url: 'https://via.placeholder.com/400x400/0000FF', latitude: 40.7128, longitude: -74.0060 },
+    { url: 'https://via.placeholder.com/400x400/FFFF00', latitude: 51.5074, longitude: -0.1278 },
+    { url: 'https://via.placeholder.com/400x400/FF00FF', latitude: 48.8566, longitude: 2.3522 },
+    { url: 'https://via.placeholder.com/400x400/00FFFF', latitude: 35.6762, longitude: 139.6503 },
+    { url: 'https://via.placeholder.com/400x400/FFFFFF', latitude: -33.8688, longitude: 151.2093 },
+    { url: 'https://via.placeholder.com/400x400/000000', latitude: 1.3521, longitude: 103.8198 },
+    { url: 'https://via.placeholder.com/400x400/123456', latitude: 55.7558, longitude: 37.6173 },
+    { url: 'https://via.placeholder.com/400x400/654321', latitude: 39.9042, longitude: 116.4074 },
+    { url: 'https://via.placeholder.com/400x400/ABCDEF', latitude: -34.6037, longitude: -58.3816 },
+    { url: 'https://via.placeholder.com/400x400/13579B', latitude: 19.4326, longitude: -99.1332 },
 ];
 
 export default function CameraPage() {
@@ -35,11 +36,11 @@ export default function CameraPage() {
     const [photo, setPhoto] = useState<string | undefined>(undefined);
     const [capturing, setCapturing] = useState(true);
     const [stream, setStream] = useState<MediaStream | null>(null);
-    const [latitude, setLatitude] = useState<number | undefined>(undefined);
-    const [longitude, setLongitude] = useState<number | undefined>(undefined);
     const [modalOpen, setModalOpen] = useState(false);
-    const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
+    const [selectedPhotos, setSelectedPhotos] = useState<PhotoData[]>([]);
     const [mapOpen, setMapOpen] = useState<boolean>(false);
+    const [seed, setSeed] = useState<string>('');  // State to store the seed value
+
     useEffect(() => {
         const constraints = {
             video: {
@@ -71,22 +72,6 @@ export default function CameraPage() {
                 stream.getTracks().forEach(track => track.stop());
             }
         };
-    }, []);
-
-    useEffect(() => {
-        if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(
-                position => {
-                    setLatitude(position.coords.latitude);
-                    setLongitude(position.coords.longitude);
-                },
-                err => {
-                    console.error("位置情報の取得に失敗しました: ", err);
-                }
-            );
-        } else {
-            console.error("このデバイスでは位置情報がサポートされていません。");
-        }
     }, []);
 
     const takePhoto = () => {
@@ -122,14 +107,9 @@ export default function CameraPage() {
     };
 
     const resetCamera = () => {
-        console.log('resetCamera called');
-        console.log('refVideo.current:', refVideo.current);
-        console.log('stream:', stream);
-
         if (refVideo.current && stream) {
             refVideo.current.srcObject = stream;
             refVideo.current.load();
-
             refVideo.current.play().then(() => {
                 console.log('Video playing after reset');
             }).catch(err => {
@@ -147,12 +127,12 @@ export default function CameraPage() {
         setModalOpen(true);
     };
 
-    const handlePhotoSelect = (photoUrl: string) => {
+    const handlePhotoSelect = (photoData: PhotoData) => {
         setSelectedPhotos(prevSelected => {
-            if (prevSelected.includes(photoUrl)) {
-                return prevSelected.filter(p => p !== photoUrl);
+            if (prevSelected.some(p => p.image === photoData.image)) {
+                return prevSelected.filter(p => p.image !== photoData.image);
             } else {
-                return [...prevSelected, photoUrl];
+                return [...prevSelected, photoData];
             }
         });
     };
@@ -160,14 +140,20 @@ export default function CameraPage() {
     const handleModalClose = () => {
         setModalOpen(false);
         setMapOpen(true);
+
+        // Generate a complex seed value based on selected photos and their geolocation data
+        const newSeed = selectedPhotos
+            .map(p => `${p.latitude},${p.longitude},${p.image}`)
+            .join('|');
+        setSeed(newSeed);
     };
 
     const handleSubmit = () => {
         if (photo !== undefined) {
             const photoData: PhotoData = {
                 image: photo,
-                latitude: latitude,
-                longitude: longitude,
+                latitude: selectedPhotos[0]?.latitude,
+                longitude: selectedPhotos[0]?.longitude,
             };
             localStorage.setItem('takePicture', JSON.stringify(photoData));
         }
@@ -223,9 +209,7 @@ export default function CameraPage() {
                 </Box>
 
                 {mapOpen ? (
-                    <MapProvider>
-                        <MapComponent />
-                    </MapProvider>
+                    <Typography>{seed}</Typography>
                 ) : (
                     <Box>
                         <div style={{ position: 'relative', width: '400px', height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -284,22 +268,23 @@ export default function CameraPage() {
                 >
                     <h2>写真を選ぶ</h2>
                     <Grid container spacing={2}>
-                        {mockPhotos.map((photoUrl, index) => (
+                        {mockPhotos.map((photoData, index) => (
                             <Grid item xs={4} key={index}>
                                 <Box
                                     position="relative"
-                                    border={selectedPhotos.includes(photoUrl) ? '2px solid #FF0000' : 'none'}
+                                    border={selectedPhotos.some(photo => photo.image === photoData.url) ? '2px solid #FF0000' : 'none'}
                                     borderRadius="8px"
                                     overflow="hidden"
-                                    onClick={() => handlePhotoSelect(photoUrl)}
+                                    onClick={() => handlePhotoSelect({ image: photoData.url, latitude: photoData.latitude, longitude: photoData.longitude })}
+
                                 >
                                     <img
-                                        src={photoUrl}
+                                        src={photoData.url}
                                         alt={`Mock Photo ${index}`}
                                         style={{ width: '100%', cursor: 'pointer' }}
                                     />
                                     <Checkbox
-                                        checked={selectedPhotos.includes(photoUrl)}
+                                        checked={selectedPhotos.some(photo => photo.image === photoData.url)}
                                         sx={{
                                             position: 'absolute',
                                             top: 0,
