@@ -31,7 +31,7 @@ export default function ComparePage() {
 
     async function compareImages(image_url1: string, image_url2: string): Promise<void> {
         try {
-            const response = await fetch('http://localhost:8080/compare-images', {
+            const response = await fetch('https://compare-images.onrender.com/compare-images', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

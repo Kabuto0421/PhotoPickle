@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Match" ALTER COLUMN "seed" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "MatchPin" ALTER COLUMN "seed" SET DATA TYPE TEXT;
