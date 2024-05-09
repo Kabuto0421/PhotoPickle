@@ -6,7 +6,8 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import ScoreAndPersonIcon from '@/libs/components/ScoreAndPerson';
 import ThreeButtons from '@/libs/components/ThreeButtons';
-
+import MapProvider from '@/providers/map-provider';
+import MapComponent from '@/libs/components/Map';
 interface PhotoData {
     image: string;
     latitude?: number;
@@ -38,7 +39,7 @@ export default function CameraPage() {
     const [longitude, setLongitude] = useState<number | undefined>(undefined);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
-
+    const [mapOpen, setMapOpen] = useState<boolean>(false);
     useEffect(() => {
         const constraints = {
             video: {
@@ -158,6 +159,7 @@ export default function CameraPage() {
 
     const handleModalClose = () => {
         setModalOpen(false);
+        setMapOpen(true);
     };
 
     const handleSubmit = () => {
@@ -220,43 +222,49 @@ export default function CameraPage() {
                     </Button>
                 </Box>
 
-                <div style={{ position: 'relative', width: '400px', height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <video ref={refVideo} autoPlay playsInline width="400" height="400" style={{ display: capturing ? 'block' : 'none' }} />
-                    {capturing ? null : (
-                        <img src={photo} alt="Captured" style={{ width: "400px", height: "400px", objectFit: 'cover' }} />
-                    )}
-                    {capturing ? (
-                        <IconButton
-                            onClick={takePhoto}
-                            sx={{
-                                position: 'absolute',
-                                bottom: 10,
-                                backgroundColor: 'white',
-                                '&:hover': { backgroundColor: '#e0e0e0' },
-                                padding: 2
-                            }}
-                        >
-                            <CameraAltIcon sx={{ photoIconStyle }} />
-                        </IconButton>
-                    ) : (
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                bottom: 10,
-                                display: 'flex',
-                                gap: 2
-                            }}
-                        >
-                            <Button variant="contained" onClick={resetCamera} sx={{ margin: 1 }}>撮り直す</Button>
-                            <NextLink href="/compare">
-                                <Button variant="contained" onClick={handleSubmit} sx={{ margin: 1 }}>保存する</Button>
-                            </NextLink>
-                        </Box>
-                    )}
-                    <canvas style={{ display: 'none' }} />
-                </div>
-            </Box>
+                {mapOpen ? (
+                    <MapProvider>
+                        <MapComponent />
+                    </MapProvider>
+                ) : (
+                    <Box>
+                        <div style={{ position: 'relative', width: '400px', height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <video ref={refVideo} autoPlay playsInline width="400" height="400" style={{ display: capturing ? 'block' : 'none' }} />
+                            {capturing ? null : (
+                                <img src={photo} alt="Captured" style={{ width: "400px", height: "400px", objectFit: 'cover' }} />
+                            )}
+                            {capturing ? (
+                                <IconButton
+                                    onClick={takePhoto}
+                                    sx={{
+                                        position: 'absolute',
+                                        bottom: 10,
+                                        backgroundColor: 'white',
+                                        '&:hover': { backgroundColor: '#e0e0e0' },
+                                        padding: 2
+                                    }}
+                                >
+                                    <CameraAltIcon sx={photoIconStyle} />
+                                </IconButton>
+                            ) : (
+                                <Box
+                                    sx={{
+                                        position: 'absolute',
+                                        bottom: 10,
+                                        display: 'flex',
+                                        gap: 2
+                                    }}
+                                >
+                                    <Button variant="contained" onClick={resetCamera} sx={{ margin: 1 }}>撮り直す</Button>
 
+                                    <Button variant="contained" onClick={handleSubmit} sx={{ margin: 1 }}>保存する</Button>
+                                </Box>
+                            )}
+                            <canvas style={{ display: 'none' }} />
+                        </div>
+                    </Box>
+                )}
+            </Box>
             {/* モーダルで写真一覧表示 */}
             <Modal open={modalOpen} onClose={handleModalClose}>
                 <Box
