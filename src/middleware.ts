@@ -9,7 +9,7 @@ export function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
-    const sessionToken = request.cookies.get('__Secure-next-auth.session-token');
+    const sessionToken = request.cookies.get('__Secure-next-auth.session-token') || request.cookies.get('next-auth.session-token');
 
     // ログインページにアクセスし、既に認証済みの場合、トップページにリダイレクト
 
