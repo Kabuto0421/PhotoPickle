@@ -177,6 +177,7 @@ export default function MapComponent() {
         console.log(seed);
 
         // マーカーの位置データをサーバーに送信
+
         try {
             const response = await fetch('/api/match/seed', {
                 method: 'POST',
@@ -184,8 +185,12 @@ export default function MapComponent() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    seed,
-                    markers: markers.map(marker => marker.position)
+                    Seed: seed,
+                    matchPins: markers.map(marker => ({
+                        latitude: marker.position.lat,
+                        longitude: marker.position.lng
+                    })),
+                    userId: "Kabuto"
                 })
             });
 
@@ -198,6 +203,7 @@ export default function MapComponent() {
         } catch (error) {
             console.error('Fetch Error:', error);
         }
+
     }
     return (
         <div>
