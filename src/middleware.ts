@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(url);
     }
 
-    // 認証済みかチェック
+    //認証済みかチェック
     if (!sessionToken && pathname !== '/login') {
         const url = request.nextUrl.clone();
         url.pathname = '/login';
