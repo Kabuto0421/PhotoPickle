@@ -12,19 +12,19 @@ export function middleware(request: NextRequest) {
     const sessionToken = request.cookies.get('__Secure-next-auth.session-token') || request.cookies.get('next-auth.session-token');
 
     // ログインページにアクセスし、既に認証済みの場合、トップページにリダイレクト
-
-    if (pathname === '/login' && sessionToken) {
-        const url = request.nextUrl.clone();
-        url.pathname = '/';
-        return NextResponse.redirect(url);
-    }
-
-    // 認証済みかチェック
-    if (!sessionToken && pathname !== '/login') {
-        const url = request.nextUrl.clone();
-        url.pathname = '/login';
-        return NextResponse.redirect(url);
-    }
-
+    /*
+        if (pathname === '/login' && sessionToken) {
+            const url = request.nextUrl.clone();
+            url.pathname = '/';
+            return NextResponse.redirect(url);
+        }
+    
+        // 認証済みかチェック
+        if (!sessionToken && pathname !== '/login') {
+            const url = request.nextUrl.clone();
+            url.pathname = '/login';
+            return NextResponse.redirect(url);
+        }
+    */
     return NextResponse.next();
 }

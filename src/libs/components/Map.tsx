@@ -68,7 +68,7 @@ export default function MapComponent() {
     const [selectedPosition, setSelectedPosition] = useState<Location | null>(null);
     const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null);
     const [selectedMarkerPicture, setSelectedMarkerPicture] = useState<string | null>(null);
-    const [seed, setSeed] = useState('');
+    const [seed, setSeed] = useState<string>('');
 
     const [mapCenter, setMapCenter] = useState({
         lat: 0,
@@ -79,12 +79,44 @@ export default function MapComponent() {
         setSeed(event.target.value);
     };
 
-    // Seed値を使用してマーカーを生成するハンドラ
-    const handleSubmitSeed = () => {
-        // Seed値を使用して何か処理を行う
-        console.log("Submitted Seed:", seed);
-        // ここでマーカーの位置を計算して更新するなどの処理を追加
-    };
+    async function fetchCoordinatesBySeed(seed: string): Promise<MarkerData[]> {
+        try {
+            const response = await fetch(`/api/match/seed?seed=${seed}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const match = await response.json();
+                console.log('Match:', match);
+
+                // MarkerData に変換（0からの連番を割り振る）
+                return match.matchPins.map(
+                    (pin: { latitude: number; longitude: number }, index: number) => ({
+                        id: index,
+                        position: {
+                            lat: pin.latitude,
+                            lng: pin.longitude
+                        }
+                    })
+                );
+            } else {
+                const errorText = await response.text();
+                console.error('Error Details:', errorText);
+            }
+        } catch (error) {
+            console.error('Fetch Error:', error);
+        }
+        return [];
+    }
+
+    async function handleSubmitSeed() {
+        console.log("このピンを選択する！", selectedPosition);
+        const data = await fetchCoordinatesBySeed(seed);
+        setMarkers(data);
+    }
     useEffect(() => {
         // 初期マウント時にランダムなseed値を生成
         const array = new Uint32Array(1);
@@ -178,6 +210,7 @@ export default function MapComponent() {
 
         // マーカーの位置データをサーバーに送信
 
+
         try {
             const response = await fetch('/api/match/seed', {
                 method: 'POST',
@@ -190,7 +223,7 @@ export default function MapComponent() {
                         latitude: marker.position.lat,
                         longitude: marker.position.lng
                     })),
-                    userId: "Kabuto"
+                    userId: "clvxy4wm40000j00ja8fnau6r" // 仮のユーザーID
                 })
             });
 
@@ -199,6 +232,8 @@ export default function MapComponent() {
                 console.log('API Response:', result);
             } else {
                 console.error('API Error:', response.statusText);
+                const errorText = await response.text();
+                console.error('Error Details:', errorText);
             }
         } catch (error) {
             console.error('Fetch Error:', error);
@@ -283,7 +318,7 @@ export default function MapComponent() {
                             pictureURL: selectedMarkerPicture,
                         }
                     }}>
-                        <Button variant="contained" color="primary" onClick={() => { handleChoice }}>
+                        <Button variant="contained" color="primary" onClick={handleChoice}>
                             <Typography variant="h6">このピンを選択する！</Typography>
                         </Button>
                     </Link>
