@@ -31,7 +31,7 @@ export default function ComparePage() {
 
     async function compareImages(image_url1: string, image_url2: string): Promise<void> {
         try {
-            const response = await fetch('https://compare-images.onrender.com/compare-images', {
+            const response = await fetch('/api/compare-images', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -42,7 +42,6 @@ export default function ComparePage() {
                 }),
             });
             const data = await response.json();
-            clearInterval(intervalId);
             const similarityScore = parseFloat(data.similarity_score);
 
             if (isNaN(similarityScore)) {
@@ -58,9 +57,8 @@ export default function ComparePage() {
                 if (matchScore >= 100) {
                     setMatchRate(100.00);
                 } else {
-                    setMatchRate(parseFloat(matchScore.toFixed(2)))
+                    setMatchRate(parseFloat(matchScore.toFixed(2)));
                 }
-
             }
         } catch (error) {
             console.error('Error:', error);
