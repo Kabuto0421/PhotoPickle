@@ -220,10 +220,10 @@ export default function CameraPage() {
                     <Typography>{seed}</Typography>
                 ) : (
                     <Box>
-                        <div style={{ position: 'relative', width: '400px', height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <video ref={refVideo} autoPlay playsInline width="400" height="400" style={{ display: capturing ? 'block' : 'none' }} />
+                        <div style={{ position: 'relative', width: '100%', aspectRatio: "1", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <video ref={refVideo} autoPlay playsInline style={{ display: capturing ? 'block' : 'none', width: "100%" }} />
                             {capturing ? null : (
-                                <img src={photo} alt="Captured" style={{ width: "400px", height: "400px", objectFit: 'cover' }} />
+                                <img src={photo} alt="Captured" style={{ width: "100%", height: "400px", objectFit: 'cover' }} />
                             )}
                             {capturing ? (
                                 <IconButton
