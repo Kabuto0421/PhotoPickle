@@ -31,6 +31,9 @@ export const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
     const { Seed, matchPins, userId }: { Seed: string; matchPins: { latitude: number; longitude: number }[]; userId: string } = body;
+
+    console.log('Received POST Request:', { Seed, matchPins, userId });
+
     await prisma.$connect();
     const match = await prisma.match.create({
       data: {
@@ -46,6 +49,9 @@ export const POST = async (req: NextRequest) => {
         },
       },
     });
+
+    console.log('Created Match:', match);
+
     return NextResponse.json({ message: 'success' }, { status: 201 });
   } catch (e) {
     console.error('DBエラー', e);
