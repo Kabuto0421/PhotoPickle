@@ -6,7 +6,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 import { Box, Button, Typography, TextField } from '@mui/material';
 import { blue } from '@mui/material/colors';
-
+import { useSession } from 'next-auth/react';
+import { User } from '../types';
 import Link from "next/link";
 // Googleマップのスタイルを定義
 const defaultMapContainerStyle = {
@@ -69,6 +70,10 @@ export default function MapComponent() {
     const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null);
     const [selectedMarkerPicture, setSelectedMarkerPicture] = useState<string | null>(null);
     const [seed, setSeed] = useState<string>('');
+    // セッションデータを取得
+    const { data: session } = useSession({ required: true });
+
+    // sessionからuserIdを取得
 
     const [mapCenter, setMapCenter] = useState({
         lat: 0,
@@ -209,36 +214,36 @@ export default function MapComponent() {
         console.log(seed);
 
         // マーカーの位置データをサーバーに送信
+        if (session) {
+            try {
+                const response = await fetch('/api/match/seed', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        Seed: seed,
+                        matchPins: markers.map(marker => ({
+                            latitude: marker.position.lat,
+                            longitude: marker.position.lng
+                        })),
+                        // userId: session?.user?.id // 仮のユーザーID
+                        userId: "clvxy4wm40000j00ja8fnau6r",
+                    })
+                });
 
-
-        try {
-            const response = await fetch('/api/match/seed', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    Seed: seed,
-                    matchPins: markers.map(marker => ({
-                        latitude: marker.position.lat,
-                        longitude: marker.position.lng
-                    })),
-                    userId: "clvxy4wm40000j00ja8fnau6r" // 仮のユーザーID
-                })
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                console.log('API Response:', result);
-            } else {
-                console.error('API Error:', response.statusText);
-                const errorText = await response.text();
-                console.error('Error Details:', errorText);
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('API Response:', result);
+                } else {
+                    console.error('API Error:', response.statusText);
+                    const errorText = await response.text();
+                    console.error('Error Details:', errorText);
+                }
+            } catch (error) {
+                console.error('Fetch Error:', error);
             }
-        } catch (error) {
-            console.error('Fetch Error:', error);
         }
-
     }
     return (
         <div>
