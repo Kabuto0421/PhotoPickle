@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
 
-export const GET = async (req: NextApiRequest, res: NextApiResponse) => {
+export const GET = async (req: NextRequest) => {
   try {
     await prisma.$connect();
     const data = await prisma.match.findMany({
@@ -18,18 +18,19 @@ export const GET = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       },
     });
-    res.status(200).json(data);
+    return NextResponse.json(data, { status: 200 });
   } catch (e) {
     console.error('DBエラー', e);
-    res.status(500).json({ message: 'DBエラー' });
+    return NextResponse.json({ message: 'DBエラー' }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
 };
 
-export const POST = async (req: NextApiRequest, res: NextApiResponse) => {
+export const POST = async (req: NextRequest) => {
   try {
-    const { Seed, matchPins, userId }: { Seed: string; matchPins: { latitude: number; longitude: number }[]; userId: string } = req.body;
+    const body = await req.json();
+    const { Seed, matchPins, userId }: { Seed: string; matchPins: { latitude: number; longitude: number }[]; userId: string } = body;
     await prisma.$connect();
     const match = await prisma.match.create({
       data: {
@@ -45,10 +46,10 @@ export const POST = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       },
     });
-    res.status(201).json({ message: 'success' });
+    return NextResponse.json({ message: 'success' }, { status: 201 });
   } catch (e) {
     console.error('DBエラー', e);
-    res.status(500).json({ message: 'DBエラー' });
+    return NextResponse.json({ message: 'DBエラー' }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
