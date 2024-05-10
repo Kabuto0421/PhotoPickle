@@ -171,15 +171,40 @@ export default function MapComponent() {
         setSelectedMarkerPicture(imageUrl);
     }
     /*ピンを選択した時に動く関数*/
-    function handleChoice() {
+    async function handleChoice() {
         console.log("このピンを選択する！", selectedPosition);
         console.log(markers);
         console.log(seed);
-        // ここにピンを選択したときの処理を追加
-        // markers...マーカーのIDとIDごとのマーカーの緯度経度が入ってる辞書型の変数
-        // seed...seed値
-    }
 
+        // マーカーの位置データをサーバーに送信
+
+        try {
+            const response = await fetch('/api/match/seed', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    Seed: seed,
+                    matchPins: markers.map(marker => ({
+                        latitude: marker.position.lat,
+                        longitude: marker.position.lng
+                    })),
+                    userId: "Kabuto"
+                })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('API Response:', result);
+            } else {
+                console.error('API Error:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Fetch Error:', error);
+        }
+
+    }
     return (
         <div>
             <GoogleMap
