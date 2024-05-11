@@ -156,14 +156,39 @@ export default function CameraPage() {
         setSeed(newSeed);
     };
 
-    const handleSubmit = () => {
+    async function handleSubmit() {
         if (photo !== undefined) {
+            const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-={}[]<>?';
+            let randomId = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charset.length);
+                randomId += charset[randomIndex];
+            }
             const photoData: PhotoData = {
                 image: photo,
                 latitude: selectedPhotos[0]?.latitude,
                 longitude: selectedPhotos[0]?.longitude,
             };
-            localStorage.setItem('takePicture', JSON.stringify(photoData));
+            try {
+                const response = await fetch('/api/match/savePictures', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        matchId: randomId,
+                        latitude: photoData.latitude,
+                        longitude: photoData.longitude,
+                        targetImage: photoData.image
+
+                    }),
+                });
+                const data = await response.json();
+                console.log(data);
+            }
+            catch (error) {
+
+            }
         }
     };
 
