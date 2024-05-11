@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
         return new Promise((_, reject) => setTimeout(() => reject(new Error('Request Timeout')), ms));
     };
 
-    const fetchWithTimeout = async (resource: string, options: RequestInit, ms = 5000) => {
+    const fetchWithTimeout = async (resource: string, options: RequestInit, ms = 60000) => {
         const controller = new AbortController();
         const id = setTimeout(() => controller.abort(), ms);
         options.signal = controller.signal;
