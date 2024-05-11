@@ -40,8 +40,21 @@ export default function CameraPage() {
     const [selectedPhotos, setSelectedPhotos] = useState<PhotoData[]>([]);
     const [mapOpen, setMapOpen] = useState<boolean>(false);
     const [seed, setSeed] = useState<string>('');  // State to store the seed value
-
+    const [mapCenter, setMapCenter] = useState({
+        lat: 0,
+        lng: 0
+    });
     useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                setMapCenter({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                });
+            }, () => {
+                console.error("位置情報の取得に失敗しました。");
+            });
+        }
         const constraints = {
             video: {
                 width: 400,
@@ -164,11 +177,6 @@ export default function CameraPage() {
                 const randomIndex = Math.floor(Math.random() * charset.length);
                 randomId += charset[randomIndex];
             }
-            const photoData: PhotoData = {
-                image: photo,
-                latitude: selectedPhotos[0]?.latitude,
-                longitude: selectedPhotos[0]?.longitude,
-            };
             try {
                 const response = await fetch('/api/match/savePictures', {
                     method: 'POST',
@@ -176,10 +184,10 @@ export default function CameraPage() {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        matchId: randomId,
-                        latitude: photoData.latitude,
-                        longitude: photoData.longitude,
-                        targetImage: photoData.image
+                        matchId: "aaabcasdsawdwefdva",
+                        latitude: mapCenter.lat,
+                        longitude: mapCenter.lng,
+                        targetImage: photo
 
                     }),
                 });
