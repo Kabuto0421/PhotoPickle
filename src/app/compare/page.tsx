@@ -30,7 +30,7 @@ export default function ComparePage() {
     }, []);
     async function compareImages(image_url1: string, image_url2: string): Promise<void> {
         try {
-            const response = await fetch('/api/compare-images', {
+            const response = await fetch('http://118.27.6.221:8080/compare-images/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
