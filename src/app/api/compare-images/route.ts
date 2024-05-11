@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ image_url1, image_url2 }),
-        }, 10000); // タイムアウトを10秒に設定
+        }, 60000); // タイムアウトを60秒に設定
 
         const responseText = await response.text();
         console.log('Response Text:', responseText);
