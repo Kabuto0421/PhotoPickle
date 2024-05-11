@@ -41,6 +41,7 @@ export default function ComparePage() {
                 }),
             });
             const data = await response.json();
+            console.log("data", data);
             const similarityScore = parseFloat(data.similarity_score);
 
             if (isNaN(similarityScore)) {
