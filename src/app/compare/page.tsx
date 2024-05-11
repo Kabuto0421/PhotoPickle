@@ -50,6 +50,7 @@ export default function ComparePage() {
                 const baseScore = 19;
                 const maxScore = 29;
                 const matchScore = Math.max(0, 100 * (1 - (similarityScore - baseScore) / (maxScore - baseScore)));
+                console.log(matchScore);
                 if (matchScore >= 90) {
                     setHighScoreAchieved(true);
                 }
