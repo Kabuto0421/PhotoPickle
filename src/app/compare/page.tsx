@@ -30,7 +30,7 @@ export default function ComparePage() {
     }, []);
     async function compareImages(image_url1: string, image_url2: string): Promise<void> {
         try {
-            const response = await fetch('https://v118-27-6-221.3eg2.static.cnode.io/compare-images/', {
+            const response = await fetch('https://v118-27-6-221.3eg2.static.cnode.io/compare-images', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
