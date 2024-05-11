@@ -2,27 +2,53 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
-    const { image_url1, image_url2 } = await request.json();
+    const timeout = (ms: number): Promise<void> => {
+        return new Promise((_, reject) => setTimeout(() => reject(new Error('Request Timeout')), ms));
+    };
 
-    if (!image_url1 || !image_url2) {
-        return NextResponse.json({ error: "Both image URLs are required." }, { status: 400 });
-    }
+    const fetchWithTimeout = async (resource: string, options: RequestInit, ms = 5000) => {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), ms);
+        options.signal = controller.signal;
+
+        try {
+            const response = await fetch(resource, options);
+            clearTimeout(id);
+            return response;
+        } catch (error) {
+            clearTimeout(id);
+            throw error;
+        }
+    };
 
     try {
-        const response = await fetch('https://compare-images.onrender.com/compare-images', {
+        const { image_url1, image_url2 } = await request.json();
+
+        if (!image_url1 || !image_url2) {
+            return NextResponse.json({ error: "Both image URLs are required." }, { status: 400 });
+        }
+
+        const response = await fetchWithTimeout('https://compare-images.onrender.com/compare-images', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ image_url1, image_url2 }),
-        });
+        }, 10000); // タイムアウトを10秒に設定
+
+        const responseText = await response.text();
+        console.log('Response Text:', responseText);
 
         if (!response.ok) {
-            const errorResponse = await response.json();
-            return NextResponse.json({ error: errorResponse.error }, { status: response.status });
+            try {
+                const errorResponse = JSON.parse(responseText);
+                return NextResponse.json({ error: errorResponse.error }, { status: response.status });
+            } catch (e) {
+                return NextResponse.json({ error: responseText }, { status: response.status });
+            }
         }
 
-        const data = await response.json();
+        const data = JSON.parse(responseText);
         return NextResponse.json(data, { status: 200 });
     } catch (error) {
         console.error('Error:', error);
