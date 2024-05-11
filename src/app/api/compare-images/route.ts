@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Both image URLs are required." }, { status: 400 });
         }
 
-        const response = await fetchWithTimeout('https://compare-images.onrender.com/compare-images', {
+        const response = await fetchWithTimeout('http://118.27.6.221/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
