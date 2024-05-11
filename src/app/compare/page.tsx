@@ -28,7 +28,6 @@ export default function ComparePage() {
         setIntervalId(id);
         return () => clearInterval(id);
     }, []);
-
     async function compareImages(image_url1: string, image_url2: string): Promise<void> {
         try {
             const response = await fetch('https://compare-images.onrender.com/compare-images', {
