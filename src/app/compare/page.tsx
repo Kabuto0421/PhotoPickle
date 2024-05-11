@@ -58,6 +58,7 @@ export default function ComparePage() {
                     setMatchRate(100.00);
                 } else {
                     setMatchRate(parseFloat(matchScore.toFixed(2)));
+                    setHighScoreAchieved(true);
                 }
             }
         } catch (error) {
